@@ -8,8 +8,7 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.Objects.requireNonNull;
 import static uk.ac.bris.cs.scotlandyard.model.Colour.BLACK;
-import static uk.ac.bris.cs.scotlandyard.model.Ticket.DOUBLE;
-import static uk.ac.bris.cs.scotlandyard.model.Ticket.SECRET;
+import static uk.ac.bris.cs.scotlandyard.model.Ticket.*;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -23,6 +22,7 @@ public class ScotlandYardModel implements ScotlandYardGame {
 
 	private List<Boolean> rounds;
 	private Graph<Integer, Transport> graph;
+	private List<ScotlandYardPlayer> players;
 
 	public ScotlandYardModel(List<Boolean> rounds, Graph<Integer, Transport> graph,
 			PlayerConfiguration mrX, PlayerConfiguration firstDetective,
@@ -69,6 +69,8 @@ public class ScotlandYardModel implements ScotlandYardGame {
 				if(configuration.tickets.get(SECRET) != 0)
 					throw new IllegalArgumentException("Detectives should not have secret tickets");
 			}
+			ScotlandYardPlayer player = new ScotlandYardPlayer(configuration.player, configuration.colour, configuration.location, configuration.tickets);
+
 		}
 
 	}
