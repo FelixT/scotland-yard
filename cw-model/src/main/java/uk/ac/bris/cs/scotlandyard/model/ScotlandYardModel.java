@@ -24,6 +24,7 @@ public class ScotlandYardModel implements ScotlandYardGame {
 	private Graph<Integer, Transport> graph;
 	private List<ScotlandYardPlayer> players;
 	private int round = 0;
+	private Colour currentPlayer = BLACK;
 
 	public ScotlandYardModel(List<Boolean> rounds, Graph<Integer, Transport> graph,
 			PlayerConfiguration mrX, PlayerConfiguration firstDetective,
@@ -133,7 +134,8 @@ public class ScotlandYardModel implements ScotlandYardGame {
 	@Override
 	public Colour getCurrentPlayer() {
 		// TODO
-		throw new RuntimeException("Implement me");
+		//throw new RuntimeException("Implement me");
+		return currentPlayer;
 	}
 
 	@Override
