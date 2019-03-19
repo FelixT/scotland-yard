@@ -133,8 +133,6 @@ public class ScotlandYardModel implements ScotlandYardGame {
 
 	@Override
 	public Colour getCurrentPlayer() {
-		// TODO
-		//throw new RuntimeException("Implement me");
 		return currentPlayer;
 	}
 
