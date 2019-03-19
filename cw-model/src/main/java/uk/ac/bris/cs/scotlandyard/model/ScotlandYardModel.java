@@ -43,6 +43,12 @@ public class ScotlandYardModel implements ScotlandYardGame {
 		configurations.add(0, firstDetective);
 		configurations.add(0, mrX);
 
+		Set<Ticket> allticketset = new HashSet<>();
+		allticketset.add(Ticket.TAXI);
+		allticketset.add(Ticket.BUS);
+		allticketset.add(Ticket.UNDERGROUND);
+		allticketset.add(Ticket.DOUBLE);
+		allticketset.add(Ticket.SECRET);
 		Set<Integer> locationset = new HashSet<>();
 		Set<Colour> colourset = new HashSet<>();
 		for (PlayerConfiguration configuration : configurations) {
@@ -52,6 +58,9 @@ public class ScotlandYardModel implements ScotlandYardGame {
 				throw new IllegalArgumentException("Duplicate colour");
 			locationset.add(configuration.location);
 			colourset.add(configuration.colour);
+
+			if(!configuration.tickets.keySet().containsAll(allticketset))
+				throw new IllegalArgumentException("Each player must have each ticket type even if their values are zero");
 
 			if(configuration.colour != BLACK) {
 				// check detectives have the right tickets
