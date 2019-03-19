@@ -23,6 +23,7 @@ public class ScotlandYardModel implements ScotlandYardGame {
 	private List<Boolean> rounds;
 	private Graph<Integer, Transport> graph;
 	private List<ScotlandYardPlayer> players;
+	private int round = 0;
 
 	public ScotlandYardModel(List<Boolean> rounds, Graph<Integer, Transport> graph,
 			PlayerConfiguration mrX, PlayerConfiguration firstDetective,
@@ -137,8 +138,7 @@ public class ScotlandYardModel implements ScotlandYardGame {
 
 	@Override
 	public int getCurrentRound() {
-		// TODO
-		throw new RuntimeException("Implement me");
+		return round;
 	}
 
 	@Override
