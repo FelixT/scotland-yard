@@ -71,6 +71,7 @@ public class ScotlandYardModel implements ScotlandYardGame {
 				if(configuration.tickets.get(SECRET) != 0)
 					throw new IllegalArgumentException("Detectives should not have secret tickets");
 			}
+
 			ScotlandYardPlayer player = new ScotlandYardPlayer(configuration.player, configuration.colour, configuration.location, configuration.tickets);
 
 		}
@@ -103,14 +104,22 @@ public class ScotlandYardModel implements ScotlandYardGame {
 
 	@Override
 	public List<Colour> getPlayers() {
-		// TODO
+		// TODO not working
 		throw new RuntimeException("Implement me");
+		/*
+		List<Colour> playerColours = new ArrayList<>();
+		for (ScotlandYardPlayer player: players)
+			playerColours.add(Objects.requireNonNull(player.colour()));
+		return Collections.unmodifiableList(playerColours);
+		//playerColours.add(configuration.colour());
+		*/
 	}
 
 	@Override
 	public Set<Colour> getWinningPlayers() {
 		// TODO
 		throw new RuntimeException("Implement me");
+
 	}
 
 	@Override
