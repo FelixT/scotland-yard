@@ -22,7 +22,7 @@ public class ScotlandYardModel implements ScotlandYardGame {
 
 	private List<Boolean> rounds;
 	private Graph<Integer, Transport> graph;
-	private List<ScotlandYardPlayer> players;
+	private List<ScotlandYardPlayer> players = new ArrayList<>();
 	private int round = 0;
 	private Colour currentPlayer = BLACK;
 
@@ -73,6 +73,7 @@ public class ScotlandYardModel implements ScotlandYardGame {
 			}
 
 			ScotlandYardPlayer player = new ScotlandYardPlayer(configuration.player, configuration.colour, configuration.location, configuration.tickets);
+			players.add(Objects.requireNonNull(player));
 
 		}
 
@@ -104,15 +105,10 @@ public class ScotlandYardModel implements ScotlandYardGame {
 
 	@Override
 	public List<Colour> getPlayers() {
-		// TODO not working
-		throw new RuntimeException("Implement me");
-		/*
 		List<Colour> playerColours = new ArrayList<>();
 		for (ScotlandYardPlayer player: players)
 			playerColours.add(Objects.requireNonNull(player.colour()));
 		return Collections.unmodifiableList(playerColours);
-		//playerColours.add(configuration.colour());
-		*/
 	}
 
 	@Override
