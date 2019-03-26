@@ -114,13 +114,15 @@ public class ScotlandYardModel implements ScotlandYardGame {
 	public Set<Colour> getWinningPlayers() {
 		// TODO
 		throw new RuntimeException("Implement me");
-
 	}
 
 	@Override
 	public Optional<Integer> getPlayerLocation(Colour colour) {
-		// TODO
-		throw new RuntimeException("Implement me");
+		for (ScotlandYardPlayer player:players) {
+			if (colour == player.colour())
+				return Optional.of(player.location());
+		}
+		return Optional.empty();
 	}
 
 	@Override
