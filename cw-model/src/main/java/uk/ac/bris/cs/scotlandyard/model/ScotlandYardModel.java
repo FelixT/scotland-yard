@@ -23,6 +23,7 @@ public class ScotlandYardModel implements ScotlandYardGame {
 	private List<Boolean> rounds;
 	private Graph<Integer, Transport> graph;
 	private List<ScotlandYardPlayer> players = new ArrayList<>();
+	private List<Spectator> spectators = new ArrayList<>();
 	private int round = 0;
 	private Colour currentPlayer = BLACK;
 
@@ -81,14 +82,12 @@ public class ScotlandYardModel implements ScotlandYardGame {
 
 	@Override
 	public void registerSpectator(Spectator spectator) {
-		// TODO
-		throw new RuntimeException("Implement me");
+		spectators.add(Objects.requireNonNull(spectator));
 	}
 
 	@Override
 	public void unregisterSpectator(Spectator spectator) {
-		// TODO
-		throw new RuntimeException("Implement me");
+		spectators.remove(spectator);
 	}
 
 	@Override
