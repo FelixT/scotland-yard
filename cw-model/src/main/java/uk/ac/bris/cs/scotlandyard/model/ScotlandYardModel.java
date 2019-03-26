@@ -115,7 +115,7 @@ public class ScotlandYardModel implements ScotlandYardGame {
 	@Override
 	public Set<Colour> getWinningPlayers() {
 		return unmodifiableSet(emptySet());
-}
+	}
 
 	@Override
 	public Optional<Integer> getPlayerLocation(Colour colour) {
