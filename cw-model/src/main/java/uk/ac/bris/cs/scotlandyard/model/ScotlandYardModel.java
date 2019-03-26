@@ -1,11 +1,7 @@
 package uk.ac.bris.cs.scotlandyard.model;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.singletonList;
-import static java.util.Collections.unmodifiableCollection;
-import static java.util.Collections.unmodifiableList;
-import static java.util.Collections.unmodifiableSet;
+import static java.util.Collections.*;
 import static java.util.Objects.requireNonNull;
 import static uk.ac.bris.cs.scotlandyard.model.Colour.BLACK;
 import static uk.ac.bris.cs.scotlandyard.model.Ticket.*;
@@ -94,6 +90,7 @@ public class ScotlandYardModel implements ScotlandYardGame {
 	public void startRotate() {
 		// TODO
 		throw new RuntimeException("Implement me");
+
 	}
 
 	@Override
@@ -111,9 +108,8 @@ public class ScotlandYardModel implements ScotlandYardGame {
 
 	@Override
 	public Set<Colour> getWinningPlayers() {
-		// TODO
-		throw new RuntimeException("Implement me");
-	}
+		return unmodifiableSet(emptySet());
+}
 
 	@Override
 	public Optional<Integer> getPlayerLocation(Colour colour) {
