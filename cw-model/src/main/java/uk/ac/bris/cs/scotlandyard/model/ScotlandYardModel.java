@@ -135,8 +135,7 @@ public class ScotlandYardModel implements ScotlandYardGame {
 
 	@Override
 	public boolean isGameOver() {
-		// TODO
-		throw new RuntimeException("Implement me");
+		return false;
 	}
 
 	@Override
@@ -156,8 +155,7 @@ public class ScotlandYardModel implements ScotlandYardGame {
 
 	@Override
 	public Graph<Integer, Transport> getGraph() {
-		// TODO
-		throw new RuntimeException("Implement me");
+        return new ImmutableGraph<>(graph);
 	}
 
 }
