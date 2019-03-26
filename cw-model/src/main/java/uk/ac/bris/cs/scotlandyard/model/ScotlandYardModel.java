@@ -98,8 +98,7 @@ public class ScotlandYardModel implements ScotlandYardGame {
 
 	@Override
 	public Collection<Spectator> getSpectators() {
-		// TODO
-		throw new RuntimeException("Implement me");
+		return spectators;
 	}
 
 	@Override
@@ -127,8 +126,11 @@ public class ScotlandYardModel implements ScotlandYardGame {
 
 	@Override
 	public Optional<Integer> getPlayerTickets(Colour colour, Ticket ticket) {
-		// TODO
-		throw new RuntimeException("Implement me");
+		for (ScotlandYardPlayer player:players) {
+			if (colour == player.colour())
+				return Optional.of(player.tickets().get(ticket));
+		}
+		return Optional.empty();
 	}
 
 	@Override
