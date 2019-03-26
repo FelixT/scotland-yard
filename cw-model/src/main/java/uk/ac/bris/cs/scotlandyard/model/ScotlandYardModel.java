@@ -86,8 +86,11 @@ public class ScotlandYardModel implements ScotlandYardGame {
 		spectators.remove(spectator);
 	}
 
-	@Override
-	public void startRotate() {
+	private Set<Move> validMove(Colour player) {
+		return emptySet();
+	}
+
+	private void nextPlayer() {
 		// get current player index
 		int playerIndex = 0;
 		for (ScotlandYardPlayer player: players)
@@ -97,6 +100,15 @@ public class ScotlandYardModel implements ScotlandYardGame {
 		int nextPlayer = playerIndex % players.size();
 		// get colour of next player
 		currentPlayer = players.get(playerIndex).colour();
+	}
+
+	@Override
+	public void startRotate() {
+		Set<Move> moves = validMove(currentPlayer);
+		//players.get(0).notify();
+		//Player p = new Player();
+		if(currentPlayer == BLACK)
+			round++;
 	}
 
 	@Override
