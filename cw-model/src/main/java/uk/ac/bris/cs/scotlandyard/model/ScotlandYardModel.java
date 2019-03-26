@@ -88,9 +88,15 @@ public class ScotlandYardModel implements ScotlandYardGame {
 
 	@Override
 	public void startRotate() {
-		// TODO
-		throw new RuntimeException("Implement me");
+		// get current player index
+		int playerIndex = 0;
+		for (ScotlandYardPlayer player: players)
+			if(player.colour() != currentPlayer)
+				playerIndex++;
 
+		int nextPlayer = playerIndex % players.size();
+		// get colour of next player
+		currentPlayer = players.get(playerIndex).colour();
 	}
 
 	@Override
