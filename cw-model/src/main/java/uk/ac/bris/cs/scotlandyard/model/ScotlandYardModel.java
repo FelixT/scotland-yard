@@ -14,7 +14,7 @@ import uk.ac.bris.cs.gamekit.graph.ImmutableGraph;
 
 
 // TODO implement all methods and pass all tests
-public class ScotlandYardModel implements ScotlandYardGame {
+public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 
 	private List<Boolean> rounds;
 	private Graph<Integer, Transport> graph;
@@ -22,11 +22,11 @@ public class ScotlandYardModel implements ScotlandYardGame {
 	private List<Spectator> spectators = new ArrayList<>();
 	private int round = 0;
 	private Colour currentPlayer = BLACK;
+	private Move lastmove;
 
 	public ScotlandYardModel(List<Boolean> rounds, Graph<Integer, Transport> graph,
 			PlayerConfiguration mrX, PlayerConfiguration firstDetective,
 			PlayerConfiguration... restOfTheDetectives) {
-		// TODO
 		this.rounds = Objects.requireNonNull(rounds);
 		this.graph = Objects.requireNonNull(graph);
 		if(rounds.isEmpty())
@@ -77,6 +77,16 @@ public class ScotlandYardModel implements ScotlandYardGame {
 	}
 
 	@Override
+	public void accept(Move move) {
+		if (move == null)
+			throw new NullPointerException("Move can't be null");
+		Set<Move> validmoves = validMove(currentPlayer);
+		if (!validmoves.contains(move))
+			throw new IllegalArgumentException("Invalid move");
+		lastmove = move;
+	}
+
+	@Override
 	public void registerSpectator(Spectator spectator) {
 		spectators.add(Objects.requireNonNull(spectator));
 	}
@@ -97,18 +107,35 @@ public class ScotlandYardModel implements ScotlandYardGame {
 			if(player.colour() != currentPlayer)
 				playerIndex++;
 
-		int nextPlayer = playerIndex % players.size();
+		int nextPlayer = (playerIndex + 1) % players.size();
 		// get colour of next player
-		currentPlayer = players.get(playerIndex).colour();
+		currentPlayer = players.get(nextPlayer).colour();
 	}
 
 	@Override
 	public void startRotate() {
-		Set<Move> moves = validMove(currentPlayer);
-		//players.get(0).notify();
-		//Player p = new Player();
-		if(currentPlayer == BLACK)
-			round++;
+		int turn = 0;
+		while(turn < players.size()) {
+			Set<Move> moves = validMove(currentPlayer);
+
+			for (ScotlandYardPlayer player : players) {
+				if (player.colour() == currentPlayer) {
+					player.player().makeMove(this, player.location(), moves, this);
+				}
+			}
+			nextPlayer();
+			if(currentPlayer == BLACK) {
+				round++;
+				for(Spectator spectator: spectators)
+					spectator.onRoundStarted(this, round);
+			}
+			turn++;
+			for(Spectator spectator: spectators)
+				spectator.onMoveMade(this, lastmove);
+		}
+		for(Spectator spectator: spectators)
+			spectator.onRotationComplete(this);
+
 	}
 
 	@Override
