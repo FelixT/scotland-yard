@@ -29,11 +29,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 			PlayerConfiguration... restOfTheDetectives) {
 		this.rounds = Objects.requireNonNull(rounds);
 		this.graph = Objects.requireNonNull(graph);
-		if(rounds.isEmpty())
+		if (rounds.isEmpty())
 			throw new IllegalArgumentException("Empty rounds");
-		if(graph.isEmpty())
+		if (graph.isEmpty())
 			throw new IllegalArgumentException("Empty map");
-		if(mrX.colour != BLACK)
+		if (mrX.colour != BLACK)
 			throw new IllegalArgumentException("MrX should be black");
 
 		ArrayList<PlayerConfiguration> configurations = new ArrayList<>();
@@ -58,14 +58,14 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 			locationset.add(configuration.location);
 			colourset.add(configuration.colour);
 
-			if(!configuration.tickets.keySet().containsAll(allticketset))
+			if (!configuration.tickets.keySet().containsAll(allticketset))
 				throw new IllegalArgumentException("Each player must have each ticket type even if their values are zero");
 
-			if(configuration.colour != BLACK) {
+			if (configuration.colour != BLACK) {
 				// check detectives have the right tickets
-				if(configuration.tickets.get(DOUBLE) != 0)
+				if (configuration.tickets.get(DOUBLE) != 0)
 					throw new IllegalArgumentException("Detectives should not have double tickets");
-				if(configuration.tickets.get(SECRET) != 0)
+				if (configuration.tickets.get(SECRET) != 0)
 					throw new IllegalArgumentException("Detectives should not have secret tickets");
 			}
 
@@ -104,7 +104,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 		// get current player index
 		int playerIndex = 0;
 		for (ScotlandYardPlayer player: players)
-			if(player.colour() != currentPlayer)
+			if (player.colour() != currentPlayer)
 				playerIndex++;
 
 		int nextPlayer = (playerIndex + 1) % players.size();
@@ -115,7 +115,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 	@Override
 	public void startRotate() {
 		int turn = 0;
-		while(turn < players.size()) {
+		while (turn < players.size()) {
 			Set<Move> moves = validMove(currentPlayer);
 
 			for (ScotlandYardPlayer player : players) {
@@ -124,16 +124,16 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 				}
 			}
 			nextPlayer();
-			if(currentPlayer == BLACK) {
+			if (currentPlayer == BLACK) {
 				round++;
-				for(Spectator spectator: spectators)
+				for (Spectator spectator: spectators)
 					spectator.onRoundStarted(this, round);
 			}
 			turn++;
-			for(Spectator spectator: spectators)
+			for (Spectator spectator: spectators)
 				spectator.onMoveMade(this, lastmove);
 		}
-		for(Spectator spectator: spectators)
+		for (Spectator spectator: spectators)
 			spectator.onRotationComplete(this);
 
 	}
@@ -158,6 +158,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 
 	@Override
 	public Optional<Integer> getPlayerLocation(Colour colour) {
+		//if (getCurrentRound() == NOT_STARTED)
+		//	return Optional.empty();
 		for (ScotlandYardPlayer player:players) {
 			if (colour == player.colour())
 				return Optional.of(player.location());
