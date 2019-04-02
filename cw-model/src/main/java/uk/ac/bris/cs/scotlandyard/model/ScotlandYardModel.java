@@ -82,7 +82,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 			throw new NullPointerException("Move can't be null");
 		Set<Move> validmoves = validMove(currentPlayer);
 		if (!validmoves.contains(move))
-			throw new IllegalArgumentException("Invalid move");
+			//throw new IllegalArgumentException("Invalid move");
 
 		lastmove = move;
 	}
@@ -105,13 +105,12 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 		// get current player index
 		int playerIndex = 0;
 
-		for (ScotlandYardPlayer player: players)
+		for (ScotlandYardPlayer player: players) {
 			if (player.colour() != currentPlayer)
 				playerIndex++;
 			else
 				break;
 		}
-		System.out.println("index" + playerIndex);
 
 		int nextPlayer = (playerIndex + 1) % players.size();
 		// get colour of next player
