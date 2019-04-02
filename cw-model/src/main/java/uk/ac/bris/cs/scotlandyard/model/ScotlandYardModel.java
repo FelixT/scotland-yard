@@ -158,11 +158,12 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 
 	@Override
 	public Optional<Integer> getPlayerLocation(Colour colour) {
-		//if (getCurrentRound() == NOT_STARTED)
-		//	return Optional.empty();
 		for (ScotlandYardPlayer player:players) {
-			if (colour == player.colour())
+			if (colour == player.colour()) {
+				if (colour == BLACK)
+					return Optional.of(0);
 				return Optional.of(player.location());
+			}
 		}
 		return Optional.empty();
 	}
