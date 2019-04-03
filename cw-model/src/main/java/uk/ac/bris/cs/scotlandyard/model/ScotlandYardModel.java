@@ -152,18 +152,14 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 
 	}
 
-	/*
 	private ScotlandYardPlayer playerFromColour(Colour colour) {
 
-		for (ScotlandYardPlayer player : players) {
-			if (player.colour() == colour) {
-				return player;
-			}
-		}
+		for (ScotlandYardPlayer player : players)
+			if (player.colour() == colour) return player;
 
 		throw new IllegalArgumentException("Player does not exist");
 
-	}*/
+	}
 
 	@Override
 	public void startRotate() {
@@ -182,17 +178,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 		for (Spectator spectator: spectators)
 			spectator.onRotationComplete(this);
 
-		//ScotlandYardPlayer player = playerFromColour(currentPlayer);
-		//player.player().makeMove(this, player.location(), moves, this);
+		ScotlandYardPlayer player = playerFromColour(currentPlayer);
+		player.player().makeMove(this, player.location(), moves, this);
 
-        for (ScotlandYardPlayer player : players)
-            if (player.colour() == currentPlayer)
-                player.player().makeMove(this, player.location(), moves, this);
-
-
-		for (ScotlandYardPlayer player : players)
-			if (player.colour() == currentPlayer)
-				player.player().makeMove(this, player.location(), moves, this);
 	}
 
 	@Override
