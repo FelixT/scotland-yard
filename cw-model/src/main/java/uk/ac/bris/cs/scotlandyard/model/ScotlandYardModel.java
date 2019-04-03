@@ -14,7 +14,7 @@ import uk.ac.bris.cs.gamekit.graph.ImmutableGraph;
 
 
 // TODO implement all methods and pass all tests
-public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
+public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, MoveVisitor {
 
 	private List<Boolean> rounds;
 	private Graph<Integer, Transport> graph;
@@ -91,6 +91,21 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 	}
 
 	@Override
+	public void visit(PassMove move) {
+
+	}
+
+	@Override
+	public void visit(TicketMove move) {
+
+	}
+
+	@Override
+	public void visit(DoubleMove move) {
+
+	}
+
+	@Override
 	public void accept(Move move) {
 		boolean wasmrx = false;
 		if (currentPlayer == BLACK)
@@ -101,9 +116,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 
 		Set<Move> validmoves = validMove(currentPlayer);
 
-		if (!validmoves.contains(move))
-			;
+		//if (!validmoves.contains(move)) {
 			//throw new IllegalArgumentException("Invalid move");
+		//}
 
 		nextPlayer();
 		if (wasmrx) {
@@ -119,6 +134,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 		for (Spectator spectator: spectators)
 			spectator.onMoveMade(this, mrXmove);
 
+		move.visit(this);
 
 	}
 
