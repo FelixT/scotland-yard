@@ -93,7 +93,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 	@Override
 	public void accept(Move move) {
 		boolean wasmrx = false;
-		if(currentPlayer == BLACK)
+		if (currentPlayer == BLACK)
 			wasmrx = true;
 
 		if (move == null)
@@ -101,9 +101,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 
 		Set<Move> validmoves = validMove(currentPlayer);
 
-		if (!validmoves.contains(move)) {
+		if (!validmoves.contains(move))
+			;
 			//throw new IllegalArgumentException("Invalid move");
-		}
 
 		nextPlayer();
 		if (wasmrx) {
@@ -132,8 +132,14 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 		spectators.remove(spectator);
 	}
 
-	private Set<Move> validMove(Colour player) {
-		return emptySet();
+	private Set<Move> validMove(Colour colour) {
+		Set<Move> moves = emptySet();
+		//int location;
+		//for (ScotlandYardPlayer player : players)
+		//	if (colour == player.colour())
+		//		location = player.location();
+		//moves.add();
+		return moves;
 	}
 
 	private void nextPlayer() {
