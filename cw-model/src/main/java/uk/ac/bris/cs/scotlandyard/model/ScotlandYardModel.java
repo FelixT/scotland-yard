@@ -22,7 +22,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 	private List<Spectator> spectators = new ArrayList<>();
 	private int round = 0;
 	private Colour currentPlayer = BLACK;
-	private Move lastmove;
+	private Move mrXmove;
 
 	public ScotlandYardModel(List<Boolean> rounds, Graph<Integer, Transport> graph,
 			PlayerConfiguration mrX, PlayerConfiguration firstDetective,
@@ -101,11 +101,20 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 		if (!validmoves.contains(move))
 			//throw new IllegalArgumentException("Invalid move");
 
-		lastmove = move;
+		if (currentPlayer == BLACK) {
+			mrXmove = move;
 
-		System.out.println("callback");
+			round = getCurrentRound() + 1;
 
-        nextPlayer();
+			for (Spectator spectator: spectators)
+				spectator.onRoundStarted(this, round);
+
+		}
+
+		for (Spectator spectator: spectators)
+			spectator.onMoveMade(this, mrXmove);
+
+		nextPlayer();
 
 	}
 
@@ -149,16 +158,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 
         Set<Move> moves = validMove(currentPlayer);
 
-        if (currentPlayer == BLACK) {
-
-            round++;
-
-            for (Spectator spectator: spectators)
-                spectator.onRoundStarted(this, round);
-
-        }
-
-
 		for (Spectator spectator: spectators)
 			spectator.onRotationComplete(this);
 
@@ -167,8 +166,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
             if (player.colour() == currentPlayer)
                 player.player().makeMove(this, player.location(), moves, this);
 
-        for (Spectator spectator: spectators)
-            spectator.onMoveMade(this, lastmove);
 
 	}
 
