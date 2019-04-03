@@ -93,16 +93,21 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	@Override
 	public void visit(PassMove move) {
 
+
 	}
 
 	@Override
 	public void visit(TicketMove move) {
 
+
 	}
 
 	@Override
 	public void visit(DoubleMove move) {
-
+		System.out.println("double move");
+		for (ScotlandYardPlayer player : players)
+			if (player.colour() == currentPlayer)
+				player.player().makeMove(this, player.location(), validMove(currentPlayer), this);
 	}
 
 	@Override
