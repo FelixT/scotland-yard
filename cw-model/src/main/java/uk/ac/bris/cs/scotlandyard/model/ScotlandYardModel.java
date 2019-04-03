@@ -99,7 +99,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 		Set<Move> validmoves = validMove(currentPlayer);
 
 		if (!validmoves.contains(move))
-			//throw new IllegalArgumentException("Invalid move");
+			throw new IllegalArgumentException("Invalid move");
 
 		if (currentPlayer == BLACK) {
 			mrXmove = move;
@@ -113,6 +113,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 
 		for (Spectator spectator: spectators)
 			spectator.onMoveMade(this, mrXmove);
+
+		System.out.println("callback");
 
 		nextPlayer();
 
@@ -137,14 +139,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 		// get current player index
 		int playerIndex = 0;
 
-		for (ScotlandYardPlayer player: players) {
-
+		for (ScotlandYardPlayer player: players)
 			if (player.colour() != currentPlayer)
 				playerIndex++;
 			else
 				break;
-
-		}
 
 		int nextPlayer = (playerIndex + 1) % players.size();
 
@@ -153,20 +152,47 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 
 	}
 
+	/*
+	private ScotlandYardPlayer playerFromColour(Colour colour) {
+
+		for (ScotlandYardPlayer player : players) {
+			if (player.colour() == colour) {
+				return player;
+			}
+		}
+
+		throw new IllegalArgumentException("Player does not exist");
+
+	}*/
+
 	@Override
 	public void startRotate() {
 
         Set<Move> moves = validMove(currentPlayer);
 
+        if (currentPlayer == BLACK) {
+
+            round++;
+
+            for (Spectator spectator: spectators)
+                spectator.onRoundStarted(this, round);
+
+        }
+
 		for (Spectator spectator: spectators)
 			spectator.onRotationComplete(this);
 
+		//ScotlandYardPlayer player = playerFromColour(currentPlayer);
+		//player.player().makeMove(this, player.location(), moves, this);
 
         for (ScotlandYardPlayer player : players)
             if (player.colour() == currentPlayer)
                 player.player().makeMove(this, player.location(), moves, this);
 
 
+		for (ScotlandYardPlayer player : players)
+			if (player.colour() == currentPlayer)
+				player.player().makeMove(this, player.location(), moves, this);
 	}
 
 	@Override
