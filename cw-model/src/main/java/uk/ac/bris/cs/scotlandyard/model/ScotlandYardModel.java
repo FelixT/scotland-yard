@@ -99,7 +99,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 		Set<Move> validmoves = validMove(currentPlayer);
 
 		if (!validmoves.contains(move))
-			throw new IllegalArgumentException("Invalid move");
+			//throw new IllegalArgumentException("Invalid move");
 
 		if (currentPlayer == BLACK) {
 			mrXmove = move;
@@ -113,8 +113,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 
 		for (Spectator spectator: spectators)
 			spectator.onMoveMade(this, mrXmove);
-
-		System.out.println("callback");
 
 		nextPlayer();
 
@@ -165,15 +163,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 	public void startRotate() {
 
         Set<Move> moves = validMove(currentPlayer);
-
-        if (currentPlayer == BLACK) {
-
-            round++;
-
-            for (Spectator spectator: spectators)
-                spectator.onRoundStarted(this, round);
-
-        }
 
 		for (Spectator spectator: spectators)
 			spectator.onRotationComplete(this);
