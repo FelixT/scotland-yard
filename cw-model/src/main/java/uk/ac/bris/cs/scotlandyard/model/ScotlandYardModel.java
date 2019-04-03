@@ -103,6 +103,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 
 		lastmove = move;
 
+		System.out.println("callback");
+
+        nextPlayer();
+
 	}
 
 	@Override
@@ -143,36 +147,28 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move> {
 	@Override
 	public void startRotate() {
 
-		int turn = 0;
+        Set<Move> moves = validMove(currentPlayer);
 
-		while (turn < players.size()) {
+        if (currentPlayer == BLACK) {
 
-			Set<Move> moves = validMove(currentPlayer);
+            round++;
 
-			for (ScotlandYardPlayer player : players)
+            for (Spectator spectator: spectators)
+                spectator.onRoundStarted(this, round);
 
-				if (player.colour() == currentPlayer)
-					player.player().makeMove(this, player.location(), moves, this);
+        }
 
-			if (currentPlayer == BLACK) {
-
-				round++;
-
-				for (Spectator spectator: spectators)
-					spectator.onRoundStarted(this, round);
-
-			}
-
-			nextPlayer();
-			turn++;
-
-			for (Spectator spectator: spectators)
-				spectator.onMoveMade(this, lastmove);
-
-		}
 
 		for (Spectator spectator: spectators)
 			spectator.onRotationComplete(this);
+
+
+        for (ScotlandYardPlayer player : players)
+            if (player.colour() == currentPlayer)
+                player.player().makeMove(this, player.location(), moves, this);
+
+        for (Spectator spectator: spectators)
+            spectator.onMoveMade(this, lastmove);
 
 	}
 
