@@ -92,26 +92,39 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public void visit(PassMove move) {
+		System.out.println("Pass move");
 
 
 	}
 
 	@Override
 	public void visit(TicketMove move) {
-
+		System.out.println("Ticket move");
 
 	}
 
 	@Override
 	public void visit(DoubleMove move) {
 		System.out.println("double move");
+
+		System.out.println("on move made");
+		for (Spectator spectator: spectators)
+			spectator.onMoveMade(this, move.firstMove());
+
+		for (Spectator spectator: spectators)
+			spectator.onMoveMade(this, move.secondMove());
+
+		System.out.println("make move");
 		for (ScotlandYardPlayer player : players)
 			if (player.colour() == currentPlayer)
 				player.player().makeMove(this, player.location(), validMove(currentPlayer), this);
+
 	}
 
 	@Override
 	public void accept(Move move) {
+		System.out.println("Consumer.accept");
+
 		boolean wasmrx = false;
 		if (currentPlayer == BLACK)
 			wasmrx = true;
@@ -130,12 +143,15 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			mrXmove = move;
 
 			round++;
+			System.out.println("Increased round");
+			System.out.println("On round started");
 
 			for (Spectator spectator: spectators)
 				spectator.onRoundStarted(this, round);
 
 		}
 
+		System.out.println("On move made");
 		for (Spectator spectator: spectators)
 			spectator.onMoveMade(this, mrXmove);
 
@@ -154,12 +170,14 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	}
 
 	private Set<Move> validMove(Colour colour) {
-		Set<Move> moves = emptySet();
 		//int location;
 		//for (ScotlandYardPlayer player : players)
 		//	if (colour == player.colour())
 		//		location = player.location();
 		//moves.add();
+		Move x = new PassMove(colour);
+		Set<Move> moves = new HashSet<>();
+		moves.add(x);
 		return moves;
 	}
 
@@ -196,16 +214,21 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public void startRotate() {
+		System.out.println("Start rotate");
+		System.out.println("Round " + round);
+		System.out.println("Current player " + currentPlayer);
 
         Set<Move> moves = validMove(currentPlayer);
 
-		for (Spectator spectator: spectators)
-			spectator.onRotationComplete(this);
-
-
+		System.out.println("Make move");
 		for (ScotlandYardPlayer player : players)
 			if (player.colour() == currentPlayer)
 				player.player().makeMove(this, player.location(), moves, this);
+
+		System.out.println("On rotation complete");
+
+		for (Spectator spectator: spectators)
+			spectator.onRotationComplete(this);
 	}
 
 	@Override
