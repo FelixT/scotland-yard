@@ -93,32 +93,68 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	@Override
 	public void visit(PassMove move) {
 		System.out.println("Pass move");
-
-
+		nextPlayer();
+		System.out.println("Next player " + currentPlayer);
 	}
 
 	@Override
 	public void visit(TicketMove move) {
-		System.out.println("Ticket move");
+		System.out.println("Ticket move, " + move.ticket());
 
+		for (ScotlandYardPlayer player : players) {
+			if (player.colour() == currentPlayer) {
+				player.location(move.destination());
+				// decrease number of tickets of player
+				int ticketsleft = player.tickets().get(move.ticket()) - 1;
+				player.tickets().replace(move.ticket(), ticketsleft);
+				if(currentPlayer != BLACK) {
+					// detectives transfer their tickets to mr x
+					for (ScotlandYardPlayer mrx : players) {
+						if (mrx.colour() == BLACK) {
+							int newtickets = mrx.tickets().get(move.ticket()) + 1;
+							mrx.tickets().replace(move.ticket(), newtickets);
+						}
+					}
+				}
+			}
+		}
+		nextPlayer();
+		System.out.println("Next player " + currentPlayer);
 	}
 
 	@Override
 	public void visit(DoubleMove move) {
 		System.out.println("double move");
 
-		System.out.println("on move made");
+		// perform logic to do moves
+
+		System.out.println("Next player " + currentPlayer);
+		nextPlayer();
+
+		System.out.println("on first move made");
+
 		for (Spectator spectator: spectators)
 			spectator.onMoveMade(this, move.firstMove());
+
+
+		for (ScotlandYardPlayer player : players) {
+			if (player.colour() == currentPlayer) {
+				player.location(move.firstMove().destination());
+			}
+		}
+
+		round++;
+
+		System.out.println("on second move made");
 
 		for (Spectator spectator: spectators)
 			spectator.onMoveMade(this, move.secondMove());
 
-		System.out.println("make move");
-		for (ScotlandYardPlayer player : players)
-			if (player.colour() == currentPlayer)
-				player.player().makeMove(this, player.location(), validMove(currentPlayer), this);
-
+		for (ScotlandYardPlayer player : players) {
+			if (player.colour() == currentPlayer) {
+				player.location(move.secondMove().destination());
+			}
+		}
 	}
 
 	@Override
@@ -138,7 +174,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			//throw new IllegalArgumentException("Invalid move");
 		//}
 
-		nextPlayer();
+		move.visit(this);
+
 		if (wasmrx) {
 			mrXmove = move;
 
@@ -154,8 +191,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		System.out.println("On move made");
 		for (Spectator spectator: spectators)
 			spectator.onMoveMade(this, mrXmove);
-
-		move.visit(this);
 
 	}
 
@@ -260,8 +295,13 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 			if (colour == player.colour()) {
 
-				if (colour == BLACK)
-					return Optional.of(0);
+				if (colour == BLACK) {
+					if((round + 4) % 5 == 0) // if its a reveal round give location
+						return Optional.of(player.location());
+					else  // otherwise return 0
+						return Optional.of(0);
+
+				}
 
 				return Optional.of(player.location());
 
