@@ -23,6 +23,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	private int round = 0;
 	private Colour currentPlayer = BLACK;
 	private Move mrXmove;
+	private int lastMrX = 0;
 
 	public ScotlandYardModel(List<Boolean> rounds, Graph<Integer, Transport> graph,
 			PlayerConfiguration mrX, PlayerConfiguration firstDetective,
@@ -138,8 +139,12 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 
 		for (ScotlandYardPlayer player : players) {
-			if (player.colour() == currentPlayer) {
+			if (player.colour() == BLACK) {
+				// decrease number of tickets of player
+				int ticketsleft = player.tickets().get(move.firstMove().ticket()) - 1;
+				player.tickets().replace(move.firstMove().ticket(), ticketsleft);
 				player.location(move.firstMove().destination());
+
 			}
 		}
 
@@ -151,8 +156,13 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			spectator.onMoveMade(this, move.secondMove());
 
 		for (ScotlandYardPlayer player : players) {
-			if (player.colour() == currentPlayer) {
+			if (player.colour() == BLACK) {
 				player.location(move.secondMove().destination());
+				// decrease number of tickets of player
+				int ticketsleft = player.tickets().get(move.secondMove().ticket()) - 1;
+				player.tickets().replace(move.secondMove().ticket(), ticketsleft);
+				int doubleticketsleft = player.tickets().get(DOUBLE) - 1;
+				player.tickets().replace(DOUBLE, doubleticketsleft);
 			}
 		}
 	}
@@ -294,12 +304,12 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		for (ScotlandYardPlayer player:players) {
 
 			if (colour == player.colour()) {
-
 				if (colour == BLACK) {
-					if((round + 4) % 5 == 0) // if its a reveal round give location
+					if(round != 0 && rounds.get(round - 1)) { // if its a reveal round give location
+						lastMrX = player.location();
 						return Optional.of(player.location());
-					else  // otherwise return 0
-						return Optional.of(0);
+					} else  // otherwise return 0
+						return Optional.of(lastMrX);
 
 				}
 
