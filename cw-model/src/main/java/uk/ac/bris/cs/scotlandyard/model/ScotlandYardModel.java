@@ -284,17 +284,13 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		for (Edge<Integer, Transport> edge: graph.getEdgesFrom(playerNode)) {
 
-			int canSecret;
 			Ticket ticket = Ticket.fromTransport(edge.data());
 			int destination = edge.destination().value();
 
 			Move maybeSecretAdd = new TicketMove(colour, SECRET, destination);
 
-			if (colour == BLACK && player.hasTickets(SECRET)) {
-				if (player.hasTickets(SECRET, 2)) canSecret = 2;
-				else canSecret = 1;
+			if (colour == BLACK && player.hasTickets(SECRET))
 				moves.add(maybeSecretAdd);
-			}
 
 			if (player.hasTickets(ticket) && noDetectiveOnSpace(destination)) {
 
@@ -311,17 +307,55 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 						System.out.println(ticket);
 						System.out.println(ticket2);
 
-						// Check player has correct tickets for double move and detective not on final space,
-						// either 2 of the same or different according to move being tried,
-						// else moveToAdd remains unchanged and only single move is used.
-						if (((ticket.name().equals(ticket2.name()) && player.hasTickets(ticket, 2))
-								|| (!ticket.name().equals(ticket2.name()) && player.hasTickets(ticket2)))
-								&& noDetectiveOnSpace(destination2)) {
+						if (noDetectiveOnSpace(destination2)) {
 
-							TicketMove move2 = new TicketMove(colour, ticket2, destination2);
-							moveToAdd = new DoubleMove(colour, move1, move2);
-							moves.add(moveToAdd);
+							if ((ticket == ticket2 && player.hasTickets(ticket, 2)) || (ticket !=
+									ticket2 && player.hasTickets(ticket) && player.hasTickets(ticket2))) {
 
+								TicketMove move2 = new TicketMove(colour, ticket2, destination2);
+								moveToAdd = new DoubleMove(colour, move1, move2);
+								moves.add(moveToAdd);
+
+							}
+
+							if (player.hasTickets(SECRET)) {
+
+								TicketMove move1sec = new TicketMove(colour, SECRET, destination);
+								TicketMove move2 = new TicketMove(colour, ticket2, destination2);
+								TicketMove move2sec = new TicketMove(colour, SECRET, destination2);
+
+								if (ticket != SECRET && ticket2 != SECRET) {
+
+									moveToAdd = new DoubleMove(colour, move1, move2sec);
+									moves.add(moveToAdd);
+
+									moveToAdd = new DoubleMove(colour, move1sec, move2);
+									moves.add(moveToAdd);
+
+								}
+
+								if (player.hasTickets(SECRET, 2)) {
+									moveToAdd = new DoubleMove(colour, move1sec, move2sec);
+									moves.add(moveToAdd);
+								}
+
+							}
+
+							/*
+							// Check player has correct tickets for double move and detective not on final space,
+							// either 2 of the same or different according to move being tried,
+							// else moveToAdd remains unchanged and only single move is used.
+							if (((ticket.name().equals(ticket2.name()) && (player.hasTickets(ticket, 2)
+									|| (player.hasTickets(ticket) && player.hasTickets(SECRET)) || canSecret == 2))
+									|| (!ticket.name().equals(ticket2.name()) && (player.hasTickets(ticket2) ||
+									(player.hasTickets(SECRET) && player.hasTickets(ticket)))) && noDetectiveOnSpace(destination2)) {
+
+								TicketMove move2 = new TicketMove(colour, ticket2, destination2);
+								moveToAdd = new DoubleMove(colour, move1, move2);
+								moves.add(moveToAdd);
+
+							}
+							*/
 						}
 
 					}
