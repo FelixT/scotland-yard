@@ -164,8 +164,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		// perform logic to do moves
 
-		System.out.println("Next player " + currentPlayer);
 		nextPlayer();
+		System.out.println("Next player " + currentPlayer);
 
 		System.out.println("on move made");
 
@@ -243,12 +243,20 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public void registerSpectator(Spectator spectator) {
-		spectators.add(Objects.requireNonNull(spectator));
+		if(spectators.contains(spectator))
+			throw new IllegalArgumentException("Spectator already exists");
+		else
+			spectators.add(Objects.requireNonNull(spectator));
 	}
 
 	@Override
 	public void unregisterSpectator(Spectator spectator) {
-		spectators.remove(spectator);
+		if(spectator == null)
+			throw new NullPointerException("Spectator can't be null");
+		else if(!spectators.contains(spectator))
+			throw new IllegalArgumentException("Spectator has never been added");
+		else
+			spectators.remove(spectator);
 	}
 
 	private Set<Move> validMoves(Colour colour) {
@@ -273,15 +281,15 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	}
 
 	private void nextPlayer() {
-
 		// get current player index
 		int playerIndex = 0;
 
-		for (ScotlandYardPlayer player: players)
+		for (ScotlandYardPlayer player: players) {
 			if (player.colour() != currentPlayer)
 				playerIndex++;
 			else
 				break;
+		}
 
 		int nextPlayer = (playerIndex + 1) % players.size();
 
