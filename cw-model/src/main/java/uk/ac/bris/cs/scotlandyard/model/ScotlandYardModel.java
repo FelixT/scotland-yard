@@ -337,7 +337,27 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public boolean isGameOver() {
-		return false;
+		boolean anytickets = false;
+		boolean playerinmrxposition = false;
+		int mrxposition = -1;
+		for (ScotlandYardPlayer mrx : players)
+			if (mrx.colour() == BLACK)
+				mrxposition = mrx.location();
+
+		for (ScotlandYardPlayer player:players) {
+			// check if detectives have any tickets remaining
+			if (player.colour() != BLACK && (player.hasTickets(TAXI) || player.hasTickets(DOUBLE) || player.hasTickets(BUS) || player.hasTickets(UNDERGROUND))) {
+				anytickets = true;
+			}
+			// check if detective in same position as mr x
+			if (player.colour() != BLACK && player.location() == mrxposition) {
+				playerinmrxposition = true;
+			}
+		}
+		// check if max rounds exceeded
+		boolean roundsexceeded = (round >= rounds.size());
+
+		return (!anytickets || roundsexceeded || playerinmrxposition);
 	}
 
 	@Override
