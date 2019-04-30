@@ -174,20 +174,22 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		TicketMove firstmove = move.firstMove();
 		TicketMove secondmove = move.secondMove();
 
-        // check if going from reveal to non reveal
-		if(!rounds.get(round) && rounds.get(round + 1)) {
-		    // if it is, set the first destination to 0
-            firstmove = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), 0);
-        }
-		// check if going from non reveal to reveal
-        if(rounds.get(round) && !rounds.get(round + 1)) {
-            // if it is, set the second destination to the destination of the first
-            secondmove = new TicketMove(move.secondMove().colour(), move.secondMove().ticket(), move.firstMove().destination());
-        }
-        // if both rounds are hidden, set both to 0
-        if(!rounds.get(round) && !rounds.get(round + 1)) {
-            firstmove = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), 0);
-            secondmove = new TicketMove(move.secondMove().colour(), move.secondMove().ticket(), 0);
+		if(rounds.size() > round) {
+            // check if going from reveal to non reveal
+            if (!rounds.get(round) && rounds.get(round + 1)) {
+                // if it is, set the first destination to 0
+                firstmove = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), 0);
+            }
+            // check if going from non reveal to reveal
+            if (rounds.get(round) && !rounds.get(round + 1)) {
+                // if it is, set the second destination to the destination of the first
+                secondmove = new TicketMove(move.secondMove().colour(), move.secondMove().ticket(), move.firstMove().destination());
+            }
+            // if both rounds are hidden, set both to 0
+            if (!rounds.get(round) && !rounds.get(round + 1)) {
+                firstmove = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), 0);
+                secondmove = new TicketMove(move.secondMove().colour(), move.secondMove().ticket(), 0);
+            }
         }
         DoubleMove specmove = new DoubleMove(currentPlayer, firstmove, secondmove);
 
@@ -453,6 +455,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public Set<Colour> getWinningPlayers() {
+        isGameOver();
 		return unmodifiableSet(winners);
 	}
 
@@ -470,7 +473,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 						return Optional.of(lastMrX);
 
 				}
-
 				return Optional.of(player.location());
 
 			}
@@ -495,38 +497,40 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public boolean isGameOver() {
-		boolean notickets = true;
+	    winners.clear();
 		boolean playerinmrxposition = false;
+		boolean nomoves = true;
+		boolean mrxstuck = true;
 		int mrxposition = -1;
 		for (ScotlandYardPlayer mrx : players)
 			if (mrx.colour() == BLACK)
 				mrxposition = mrx.location();
 
 		for (ScotlandYardPlayer player : players) {
-			// check if any detective has tickets remaining
-			if (player.colour() != BLACK && (player.hasTickets(TAXI) || player.hasTickets(BUS) || player.hasTickets(UNDERGROUND))) {
-				notickets = false;
-			}
 			// check if detective in same position as mr x
 			if (player.colour() != BLACK && player.location() == mrxposition) {
 				playerinmrxposition = true;
 			}
+			// check if any detective has any moves remaining
+            Move pass = new PassMove(player.colour());
+            if(player.colour() != BLACK && !validMoves(player.colour()).contains(pass))
+                nomoves = false;
+            if(player.colour() == BLACK && !validMoves(player.colour()).isEmpty())
+                mrxstuck = false;
 		}
 		// check if max rounds exceeded
-		boolean roundsexceeded = (round > rounds.size());
+		boolean roundsexceeded = (round >= rounds.size());
 
-		if(notickets)
-			winners.add(BLACK);
-		if(roundsexceeded)
-			winners.add(BLACK);
-		if(playerinmrxposition) {
+		if(playerinmrxposition || mrxstuck) {
 			// all detectives win
 			for (ScotlandYardPlayer player : players)
 				if (player.colour() != BLACK)
 					winners.add(player.colour());
-		}
+		} else if(roundsexceeded || nomoves) {
+            winners.add(BLACK);
+        }
 
-		return (notickets || roundsexceeded || playerinmrxposition);
+		return (nomoves || roundsexceeded || playerinmrxposition || mrxstuck);
 	}
 
 	@Override
