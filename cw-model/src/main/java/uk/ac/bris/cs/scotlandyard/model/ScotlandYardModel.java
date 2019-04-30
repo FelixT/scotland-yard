@@ -283,9 +283,18 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		Move pass = new PassMove(colour);
 
 		for (Edge<Integer, Transport> edge: graph.getEdgesFrom(playerNode)) {
-			System.out.println(edge.data().toString());
+
+			int canSecret;
 			Ticket ticket = Ticket.fromTransport(edge.data());
 			int destination = edge.destination().value();
+
+			Move maybeSecretAdd = new TicketMove(colour, SECRET, destination);
+
+			if (colour == BLACK && player.hasTickets(SECRET)) {
+				if (player.hasTickets(SECRET, 2)) canSecret = 2;
+				else canSecret = 1;
+				moves.add(maybeSecretAdd);
+			}
 
 			if (player.hasTickets(ticket) && noDetectiveOnSpace(destination)) {
 
@@ -299,6 +308,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 						TicketMove move1 = new TicketMove(colour, ticket, destination);
 						Ticket ticket2   = Ticket.fromTransport(edge2.data());
 						int destination2 = edge2.destination().value();
+						System.out.println(ticket);
+						System.out.println(ticket2);
 
 						// Check player has correct tickets for double move and detective not on final space,
 						// either 2 of the same or different according to move being tried,
