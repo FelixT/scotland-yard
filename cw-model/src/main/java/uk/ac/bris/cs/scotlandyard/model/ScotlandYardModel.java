@@ -480,10 +480,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	public boolean isGameOver() {
 		boolean notickets = true;
 		boolean playerinmrxposition = false;
-		int mrxposition = -1;
-		for (ScotlandYardPlayer mrx : players)
-			if (mrx.colour() == BLACK)
-				mrxposition = mrx.location();
+		ScotlandYardPlayer mrx = colourMap.get(BLACK);
+		int mrxposition = mrx.location();
 
 		for (ScotlandYardPlayer player : players) {
 			// check if any detective has tickets remaining
