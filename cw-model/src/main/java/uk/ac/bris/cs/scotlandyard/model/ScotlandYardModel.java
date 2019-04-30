@@ -101,7 +101,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	private void checkGameOver() {
         if(isGameOver())
-            for (Spectator spectator: spectators)
+            for (Spectator spectator : spectators)
                 spectator.onGameOver(this, getWinningPlayers());
     }
 
@@ -120,7 +120,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
             System.out.println("Increased round");
             System.out.println("On round started");
 
-            for (Spectator spectator: spectators)
+            for (Spectator spectator : spectators)
                 spectator.onRoundStarted(this, round);
 
         }
@@ -151,7 +151,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		System.out.println("Next player " + currentPlayer);
 
 		System.out.println("On move made");
-		for (Spectator spectator: spectators)
+		for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, move);
 		checkGameOver();
 
@@ -160,7 +160,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			System.out.println("Increased round");
 			System.out.println("On round started");
 
-			for (Spectator spectator: spectators)
+			for (Spectator spectator : spectators)
 				spectator.onRoundStarted(this, round);
 
 		}
@@ -200,7 +200,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		System.out.println("on move made");
 
-		for (Spectator spectator: spectators)
+		for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, specmove);
 
 
@@ -208,19 +208,19 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		System.out.println("Increased round");
 		System.out.println("On round started");
 
-		for (Spectator spectator: spectators)
+		for (Spectator spectator : spectators)
 			spectator.onRoundStarted(this, round);
 
 		System.out.println("on first move made");
 
-		for (Spectator spectator: spectators)
+		for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, firstmove);
 
 		round++;
 		System.out.println("Increased round");
 		System.out.println("On round started");
 
-		for (Spectator spectator: spectators)
+		for (Spectator spectator : spectators)
 			spectator.onRoundStarted(this, round);
 
 
@@ -238,7 +238,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		System.out.println("on second move made");
 
-		for (Spectator spectator: spectators)
+		for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, secondmove);
 
 		for (ScotlandYardPlayer player : players) {
@@ -306,7 +306,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		Set<Move> moves = new HashSet<>();
 		Move pass = new PassMove(colour);
 
-		for (Edge<Integer, Transport> edge: graph.getEdgesFrom(playerNode)) {
+		for (Edge<Integer, Transport> edge : graph.getEdgesFrom(playerNode)) {
 
 			Ticket ticket = Ticket.fromTransport(edge.data());
 			int destination = edge.destination().value();
@@ -384,7 +384,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		// get current player index
 		int playerIndex = 0;
 
-		for (ScotlandYardPlayer player: players) {
+		for (ScotlandYardPlayer player : players) {
 			if (player.colour() != currentPlayer)
 				playerIndex++;
 			else
@@ -397,19 +397,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		currentPlayer = players.get(nextPlayer).colour();
 
 	}
-
-	/*
-	private ScotlandYardPlayer playerFromColour(Colour colour) {
-
-		for (ScotlandYardPlayer player : players) {
-			if (player.colour() == colour) {
-				return player;
-			}
-		}
-
-		throw new IllegalArgumentException("Player does not exist");
-
-	}*/
 
 	@Override
 	public void startRotate() {
@@ -444,7 +431,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		List<Colour> playerColours = new ArrayList<>();
 
-		for (ScotlandYardPlayer player: players)
+		for (ScotlandYardPlayer player : players)
 			playerColours.add(Objects.requireNonNull(player.colour()));
 
 		return Collections.unmodifiableList(playerColours);
@@ -459,7 +446,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	@Override
 	public Optional<Integer> getPlayerLocation(Colour colour) {
 
-		for (ScotlandYardPlayer player:players) {
+		for (ScotlandYardPlayer player : players) {
 
 			if (colour == player.colour()) {
 				if (colour == BLACK) {
@@ -484,7 +471,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	@Override
 	public Optional<Integer> getPlayerTickets(Colour colour, Ticket ticket) {
 
-		for (ScotlandYardPlayer player:players) {
+		for (ScotlandYardPlayer player : players) {
 			if (colour == player.colour())
 				return Optional.of(player.tickets().get(ticket));
 		}
