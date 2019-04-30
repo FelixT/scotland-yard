@@ -304,8 +304,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 						TicketMove move1 = new TicketMove(colour, ticket, destination);
 						Ticket ticket2   = Ticket.fromTransport(edge2.data());
 						int destination2 = edge2.destination().value();
-						System.out.println(ticket);
-						System.out.println(ticket2);
 
 						if (noDetectiveOnSpace(destination2)) {
 
@@ -324,14 +322,14 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 								TicketMove move2 = new TicketMove(colour, ticket2, destination2);
 								TicketMove move2sec = new TicketMove(colour, SECRET, destination2);
 
-								if (ticket != SECRET && ticket2 != SECRET) {
-
+								if (ticket != SECRET && ticket2 != SECRET && player.hasTickets(ticket)) {
 									moveToAdd = new DoubleMove(colour, move1, move2sec);
 									moves.add(moveToAdd);
+								}
 
+								if (ticket != SECRET && ticket2 != SECRET && player.hasTickets(ticket2)) {
 									moveToAdd = new DoubleMove(colour, move1sec, move2);
 									moves.add(moveToAdd);
-
 								}
 
 								if (player.hasTickets(SECRET, 2)) {
@@ -341,21 +339,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 							}
 
-							/*
-							// Check player has correct tickets for double move and detective not on final space,
-							// either 2 of the same or different according to move being tried,
-							// else moveToAdd remains unchanged and only single move is used.
-							if (((ticket.name().equals(ticket2.name()) && (player.hasTickets(ticket, 2)
-									|| (player.hasTickets(ticket) && player.hasTickets(SECRET)) || canSecret == 2))
-									|| (!ticket.name().equals(ticket2.name()) && (player.hasTickets(ticket2) ||
-									(player.hasTickets(SECRET) && player.hasTickets(ticket)))) && noDetectiveOnSpace(destination2)) {
-
-								TicketMove move2 = new TicketMove(colour, ticket2, destination2);
-								moveToAdd = new DoubleMove(colour, move1, move2);
-								moves.add(moveToAdd);
-
-							}
-							*/
 						}
 
 					}
