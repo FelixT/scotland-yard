@@ -447,26 +447,18 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	@Override
 	public Optional<Integer> getPlayerLocation(Colour colour) {
 
-		for (ScotlandYardPlayer player : players) {
+		ScotlandYardPlayer player = colourMap.get(colour);
 
-			if (colour == player.colour()) {
-				if (colour == BLACK) {
-					if(round != 0 && rounds.get(round - 1)) { // if its a reveal round give location
-						lastMrX = player.location();
-						return Optional.of(player.location());
-					} else  // otherwise return 0
-						return Optional.of(lastMrX);
-
-				}
-
+		if (colour == BLACK) {
+			if(round != 0 && rounds.get(round - 1)) { // if its a reveal round give location
+				lastMrX = player.location();
 				return Optional.of(player.location());
-
-			}
-
+			} else  // otherwise return 0
+				return Optional.of(lastMrX);
 		}
 
-		return Optional.empty();
-
+		if (player == null) return Optional.empty();
+		return Optional.of(player.location());
 	}
 
 	@Override
