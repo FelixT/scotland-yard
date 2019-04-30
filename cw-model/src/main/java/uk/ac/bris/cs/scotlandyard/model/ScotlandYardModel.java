@@ -23,8 +23,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	private List<Spectator> spectators = new ArrayList<>();
 	private int round = 0;
 	private Colour currentPlayer = BLACK;
-	private Move mrXmove;
 	private int lastMrX = 0;
+	private boolean wasmrx = false;
 	private Map<Colour, ScotlandYardPlayer> colourMap = new HashMap<>();
 
 	public ScotlandYardModel(List<Boolean> rounds, Graph<Integer, Transport> graph,
@@ -98,11 +98,25 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	}
 
 	@Override
-	public void visit(PassMove move) {
-		System.out.println("Pass move");
-		nextPlayer();
-		System.out.println("Next player " + currentPlayer);
-	}
+    public void visit(PassMove move) {
+        System.out.println("Pass move");
+        nextPlayer();
+        System.out.println("Next player " + currentPlayer);
+
+        System.out.println("On move made");
+        for (Spectator spectator: spectators)
+            spectator.onMoveMade(this, move);
+
+        if (wasmrx) {
+            round++;
+            System.out.println("Increased round");
+            System.out.println("On round started");
+
+            for (Spectator spectator: spectators)
+                spectator.onRoundStarted(this, round);
+
+        }
+    }
 
 	@Override
 	public void visit(TicketMove move) {
@@ -127,6 +141,21 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		}
 		nextPlayer();
 		System.out.println("Next player " + currentPlayer);
+
+		System.out.println("On move made");
+		for (Spectator spectator: spectators)
+			spectator.onMoveMade(this, move);
+
+		if (wasmrx) {
+			round++;
+			System.out.println("Increased round");
+			System.out.println("On round started");
+
+			for (Spectator spectator: spectators)
+				spectator.onRoundStarted(this, round);
+
+		}
+
 	}
 
 	@Override
@@ -138,10 +167,30 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		System.out.println("Next player " + currentPlayer);
 		nextPlayer();
 
+		System.out.println("on move made");
+
+		for (Spectator spectator: spectators)
+			spectator.onMoveMade(this, move);
+
+
+		round++;
+		System.out.println("Increased round");
+		System.out.println("On round started");
+
+		for (Spectator spectator: spectators)
+			spectator.onRoundStarted(this, round);
+
 		System.out.println("on first move made");
 
 		for (Spectator spectator: spectators)
 			spectator.onMoveMade(this, move.firstMove());
+
+		round++;
+		System.out.println("Increased round");
+		System.out.println("On round started");
+
+		for (Spectator spectator: spectators)
+			spectator.onRoundStarted(this, round);
 
 
 		for (ScotlandYardPlayer player : players) {
@@ -154,7 +203,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			}
 		}
 
-		round++;
 
 		System.out.println("on second move made");
 
@@ -177,7 +225,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	public void accept(Move move) {
 		System.out.println("Consumer.accept");
 
-		boolean wasmrx = false;
 		if (currentPlayer == BLACK)
 			wasmrx = true;
 
@@ -191,22 +238,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		//}
 
 		move.visit(this);
-
-		if (wasmrx) {
-			mrXmove = move;
-
-			round++;
-			System.out.println("Increased round");
-			System.out.println("On round started");
-
-			for (Spectator spectator: spectators)
-				spectator.onRoundStarted(this, round);
-
-		}
-
-		System.out.println("On move made");
-		for (Spectator spectator: spectators)
-			spectator.onMoveMade(this, mrXmove);
 
 	}
 
