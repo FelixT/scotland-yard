@@ -485,9 +485,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		int mrxposition = mrx.location();
 		boolean nomoves = true;
 		boolean mrxstuck = true;
-		for (ScotlandYardPlayer mrx : players)
-			if (mrx.colour() == BLACK)
-				mrxposition = mrx.location();
 
 		for (ScotlandYardPlayer player : players) {
 			// check if detective in same position as mr x
