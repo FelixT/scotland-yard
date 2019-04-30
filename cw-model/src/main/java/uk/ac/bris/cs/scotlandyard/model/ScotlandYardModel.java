@@ -11,6 +11,7 @@ import java.util.function.Consumer;
 import uk.ac.bris.cs.gamekit.graph.Edge;
 import uk.ac.bris.cs.gamekit.graph.Graph;
 import uk.ac.bris.cs.gamekit.graph.ImmutableGraph;
+import uk.ac.bris.cs.gamekit.graph.Node;
 
 
 // TODO implement all methods and pass all tests
@@ -24,6 +25,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	private Colour currentPlayer = BLACK;
 	private Move mrXmove;
 	private int lastMrX = 0;
+	private Map<Colour, ScotlandYardPlayer> colourMap = new HashMap<>();
 
 	public ScotlandYardModel(List<Boolean> rounds, Graph<Integer, Transport> graph,
 			PlayerConfiguration mrX, PlayerConfiguration firstDetective,
@@ -87,6 +89,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			ScotlandYardPlayer player = new ScotlandYardPlayer(configuration.player, configuration.colour, configuration.location, configuration.tickets);
 			players.add(Objects.requireNonNull(player));
 
+		}
+
+		for (ScotlandYardPlayer player : players) {
+			colourMap.put(player.colour(), player);
 		}
 
 	}
@@ -178,9 +184,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		if (move == null)
 			throw new NullPointerException("Move can't be null");
 
-		Set<Move> validmoves = validMove(currentPlayer);
+		Set<Move> validMoves = validMoves(currentPlayer);
 
-		//if (!validmoves.contains(move)) {
+		//if (!validMoves.contains(move)) {
 			//throw new IllegalArgumentException("Invalid move");
 		//}
 
@@ -214,13 +220,23 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		spectators.remove(spectator);
 	}
 
-	private Set<Move> validMove(Colour colour) {
+	private Set<Move> validMoves(Colour colour) {
 		//int location;
 		//for (ScotlandYardPlayer player : players)
 		//	if (colour == player.colour())
 		//		location = player.location();
 		//moves.add();
+
+		ScotlandYardPlayer player = colourMap.get(colour);
+		Node<Integer> playerNode = graph.getNode(player.location());
+
+		for (Edge<Integer, Transport> edge : graph.getEdgesFrom(playerNode)) {
+			edge.destination();
+		}
+
+
 		Move x = new PassMove(colour);
+
 		Set<Move> moves = new HashSet<>();
 		moves.add(x);
 		return moves;
@@ -263,7 +279,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		System.out.println("Round " + round);
 		System.out.println("Current player " + currentPlayer);
 
-        Set<Move> moves = validMove(currentPlayer);
+        Set<Move> moves = validMoves(currentPlayer);
 
 		System.out.println("Make move");
 		for (ScotlandYardPlayer player : players)
