@@ -252,28 +252,23 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	}
 
 	private Set<Move> validMoves(Colour colour) {
-		//int location;
-		//for (ScotlandYardPlayer player : players)
-		//	if (colour == player.colour())
-		//		location = player.location();
-		//moves.add();
 
 		ScotlandYardPlayer player = colourMap.get(colour);
 		Node<Integer> playerNode = graph.getNode(player.location());
-
 		Set<Move> moves = new HashSet<>();
 
 		Move x = new PassMove(colour);
 
 		for (Edge<Integer, Transport> edge: graph.getEdgesFrom(playerNode)) {
-			edge.destination();
 			Ticket ticket = Ticket.fromTransport(edge.data());
 			int destination = edge.destination().value();
 			Move moveToAdd = new TicketMove(colour, ticket, destination);
 			moves.add(moveToAdd);
 		}
 
-		//moves.add(x);
+		if (player.colour() != BLACK && moves.isEmpty())
+			moves.add(x);
+
 		return moves;
 	}
 
