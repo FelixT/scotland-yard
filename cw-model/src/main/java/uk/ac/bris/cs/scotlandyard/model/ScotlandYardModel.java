@@ -8,6 +8,8 @@ import static uk.ac.bris.cs.scotlandyard.model.Ticket.*;
 
 import java.util.*;
 import java.util.function.Consumer;
+
+import org.apache.commons.lang3.ObjectUtils;
 import uk.ac.bris.cs.gamekit.graph.Edge;
 import uk.ac.bris.cs.gamekit.graph.Graph;
 import uk.ac.bris.cs.gamekit.graph.ImmutableGraph;
@@ -261,15 +263,18 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		for (Edge<Integer, Transport> edge: graph.getEdgesFrom(playerNode)) {
 			Ticket ticket = Ticket.fromTransport(edge.data());
-			int destination = edge.destination().value();
-			Move moveToAdd = new TicketMove(colour, ticket, destination);
-			moves.add(moveToAdd);
+			if (player.tickets().containsKey(ticket)) {
+				int destination = edge.destination().value();
+				Move moveToAdd = new TicketMove(colour, ticket, destination);
+				moves.add(moveToAdd);
+			}
 		}
 
 		if (player.colour() != BLACK && moves.isEmpty())
 			moves.add(x);
 
 		return moves;
+
 	}
 
 	private void nextPlayer() {
