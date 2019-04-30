@@ -277,7 +277,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		Move pass = new PassMove(colour);
 
 		for (Edge<Integer, Transport> edge: graph.getEdgesFrom(playerNode)) {
-
+			System.out.println(edge.data().toString());
 			Ticket ticket = Ticket.fromTransport(edge.data());
 			int destination = edge.destination().value();
 
@@ -298,7 +298,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 						// either 2 of the same or different according to move being tried,
 						// else moveToAdd remains unchanged and only single move is used.
 						if (((ticket.name().equals(ticket2.name()) && player.hasTickets(ticket, 2))
-								|| player.hasTickets(ticket2)) && noDetectiveOnSpace(destination2)) {
+								|| (!ticket.name().equals(ticket2.name()) && player.hasTickets(ticket2)))
+								&& noDetectiveOnSpace(destination2)) {
 
 							TicketMove move2 = new TicketMove(colour, ticket2, destination2);
 							moveToAdd = new DoubleMove(colour, move1, move2);
