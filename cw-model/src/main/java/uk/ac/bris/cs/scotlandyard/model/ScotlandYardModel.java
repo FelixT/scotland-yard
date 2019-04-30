@@ -167,9 +167,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		// check if going from reveal to non reveal
 		TicketMove firstmove = move.firstMove();
-		if(rounds.get(round) && !rounds.get(round + 1))
+		if(!rounds.get(round) && rounds.get(round + 1))
 			firstmove = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), 0);
 
+		System.out.println(firstmove.destination());
 		// perform logic to do moves
 
 		nextPlayer();
@@ -233,8 +234,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	public void accept(Move move) {
 		System.out.println("Consumer.accept");
 
-		if (currentPlayer == BLACK)
-			wasmrx = true;
+		wasmrx = (currentPlayer == BLACK);
 
 		if (move == null)
 			throw new NullPointerException("Move can't be null");
