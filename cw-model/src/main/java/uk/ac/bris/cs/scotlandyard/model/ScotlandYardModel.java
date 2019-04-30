@@ -9,7 +9,6 @@ import static uk.ac.bris.cs.scotlandyard.model.Ticket.*;
 import java.util.*;
 import java.util.function.Consumer;
 
-import org.apache.commons.lang3.ObjectUtils;
 import uk.ac.bris.cs.gamekit.graph.Edge;
 import uk.ac.bris.cs.gamekit.graph.Graph;
 import uk.ac.bris.cs.gamekit.graph.ImmutableGraph;
@@ -478,7 +477,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		ScotlandYardPlayer mrx = colourMap.get(BLACK);
 		int mrxposition = mrx.location();
 		boolean nomoves = true;
-		boolean mrxstuck = true;
+		boolean mrxstuck = validMoves(BLACK).isEmpty();
 
 		for (ScotlandYardPlayer player : players) {
 			// check if detective in same position as mr x
@@ -489,8 +488,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
             Move pass = new PassMove(player.colour());
             if(player.colour() != BLACK && !validMoves(player.colour()).contains(pass))
                 nomoves = false;
-            if(player.colour() == BLACK && !validMoves(player.colour()).isEmpty())
-                mrxstuck = false;
 		}
 		// check if max rounds exceeded
 		boolean roundsexceeded = (round >= rounds.size());
