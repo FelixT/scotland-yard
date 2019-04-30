@@ -28,6 +28,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	private int lastMrX = 0;
 	private boolean wasmrx = false;
 	private Map<Colour, ScotlandYardPlayer> colourMap = new HashMap<>();
+	private Set<Colour> winners = new HashSet<>();
 
 	public ScotlandYardModel(List<Boolean> rounds, Graph<Integer, Transport> graph,
 			PlayerConfiguration mrX, PlayerConfiguration firstDetective,
@@ -164,6 +165,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	public void visit(DoubleMove move) {
 		System.out.println("double move");
 
+		// check if going from reveal to non reveal
+		TicketMove firstmove = move.firstMove();
+		if(rounds.get(round) && !rounds.get(round + 1))
+			firstmove = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), 0);
+
 		// perform logic to do moves
 
 		nextPlayer();
@@ -185,7 +191,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		System.out.println("on first move made");
 
 		for (Spectator spectator: spectators)
-			spectator.onMoveMade(this, move.firstMove());
+			spectator.onMoveMade(this, firstmove);
 
 		round++;
 		System.out.println("Increased round");
@@ -355,6 +361,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public void startRotate() {
+		if(isGameOver()) {
+			throw new IllegalStateException("Can't start new round when the game is already over");
+		}
+
 		System.out.println("Start rotate");
 		System.out.println("Round " + round);
 		System.out.println("Current player " + currentPlayer);
@@ -391,7 +401,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public Set<Colour> getWinningPlayers() {
-		return unmodifiableSet(emptySet());
+		return unmodifiableSet(winners);
 	}
 
 	@Override
@@ -433,17 +443,17 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public boolean isGameOver() {
-		boolean anytickets = false;
+		boolean notickets = true;
 		boolean playerinmrxposition = false;
 		int mrxposition = -1;
 		for (ScotlandYardPlayer mrx : players)
 			if (mrx.colour() == BLACK)
 				mrxposition = mrx.location();
 
-		for (ScotlandYardPlayer player:players) {
-			// check if detectives have any tickets remaining
-			if (player.colour() != BLACK && (player.hasTickets(TAXI) || player.hasTickets(DOUBLE) || player.hasTickets(BUS) || player.hasTickets(UNDERGROUND))) {
-				anytickets = true;
+		for (ScotlandYardPlayer player : players) {
+			// check if any detective has tickets remaining
+			if (player.colour() != BLACK && (player.hasTickets(TAXI) || player.hasTickets(BUS) || player.hasTickets(UNDERGROUND))) {
+				notickets = false;
 			}
 			// check if detective in same position as mr x
 			if (player.colour() != BLACK && player.location() == mrxposition) {
@@ -451,9 +461,20 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			}
 		}
 		// check if max rounds exceeded
-		boolean roundsexceeded = (round >= rounds.size());
+		boolean roundsexceeded = (round > rounds.size());
 
-		return (!anytickets || roundsexceeded || playerinmrxposition);
+		if(notickets)
+			winners.add(BLACK);
+		if(roundsexceeded)
+			winners.add(BLACK);
+		if(playerinmrxposition) {
+			// all detectives win
+			for (ScotlandYardPlayer player : players)
+				if (player.colour() != BLACK)
+					winners.add(player.colour());
+		}
+
+		return (notickets || roundsexceeded || playerinmrxposition);
 	}
 
 	@Override

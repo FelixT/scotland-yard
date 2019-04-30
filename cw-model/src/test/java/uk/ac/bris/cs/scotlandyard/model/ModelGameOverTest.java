@@ -56,7 +56,7 @@ public class ModelGameOverTest extends ParameterisedModelTestBase {
 				.startRotationAndAssertTheseInteractionsOccurInOrder(
 						player(BLACK).makeMove().willPick(taxi(102)),
 						player(BLUE).makeMove().willPick(taxi(51)))
-				.thenRequire(gameNotOver())
+  				.thenRequire(gameNotOver())
 				.thenIgnoreAnyFurtherInteractions();
 	}
 
