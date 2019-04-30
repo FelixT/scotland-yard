@@ -9,7 +9,6 @@ import static uk.ac.bris.cs.scotlandyard.model.Ticket.*;
 import java.util.*;
 import java.util.function.Consumer;
 
-import org.apache.commons.lang3.ObjectUtils;
 import uk.ac.bris.cs.gamekit.graph.Edge;
 import uk.ac.bris.cs.gamekit.graph.Graph;
 import uk.ac.bris.cs.gamekit.graph.ImmutableGraph;
@@ -100,6 +99,12 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	private void checkGameOver() {
+        if(isGameOver())
+            for (Spectator spectator: spectators)
+                spectator.onGameOver(this, getWinningPlayers());
+    }
+
 	@Override
     public void visit(PassMove move) {
         System.out.println("Pass move");
@@ -148,6 +153,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		System.out.println("On move made");
 		for (Spectator spectator: spectators)
 			spectator.onMoveMade(this, move);
+		checkGameOver();
 
 		if (wasmrx) {
 			round++;
@@ -165,13 +171,29 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	public void visit(DoubleMove move) {
 		System.out.println("double move");
 
-		// check if going from reveal to non reveal
 		TicketMove firstmove = move.firstMove();
-		if(!rounds.get(round) && rounds.get(round + 1))
-			firstmove = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), 0);
+		TicketMove secondmove = move.secondMove();
 
-		System.out.println(firstmove.destination());
-		// perform logic to do moves
+        // check if going from reveal to non reveal
+		if(!rounds.get(round) && rounds.get(round + 1)) {
+		    // if it is, set the first destination to 0
+            firstmove = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), 0);
+        }
+		// check if going from non reveal to reveal
+        if(rounds.get(round) && !rounds.get(round + 1)) {
+            // if it is, set the second destination to the destination of the first
+            secondmove = new TicketMove(move.secondMove().colour(), move.secondMove().ticket(), move.firstMove().destination());
+        }
+        // if both rounds are hidden, set both to 0
+        if(!rounds.get(round) && !rounds.get(round + 1)) {
+            firstmove = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), 0);
+            secondmove = new TicketMove(move.secondMove().colour(), move.secondMove().ticket(), 0);
+        }
+        DoubleMove specmove = new DoubleMove(currentPlayer, firstmove, secondmove);
+
+
+
+        // perform logic to do moves
 
 		nextPlayer();
 		System.out.println("Next player " + currentPlayer);
@@ -179,7 +201,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		System.out.println("on move made");
 
 		for (Spectator spectator: spectators)
-			spectator.onMoveMade(this, move);
+			spectator.onMoveMade(this, specmove);
 
 
 		round++;
@@ -212,11 +234,12 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			}
 		}
 
+        checkGameOver();
 
 		System.out.println("on second move made");
 
 		for (Spectator spectator: spectators)
-			spectator.onMoveMade(this, move.secondMove());
+			spectator.onMoveMade(this, secondmove);
 
 		for (ScotlandYardPlayer player : players) {
 			if (player.colour() == BLACK) {
@@ -228,6 +251,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 				player.tickets().replace(DOUBLE, doubleticketsleft);
 			}
 		}
+
+        checkGameOver();
 	}
 
 	@Override
@@ -246,7 +271,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		//}
 
 		move.visit(this);
-
 	}
 
 	@Override
@@ -395,7 +419,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public Collection<Spectator> getSpectators() {
-		return spectators;
+		return unmodifiableList(spectators);
 	}
 
 	@Override
