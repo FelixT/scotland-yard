@@ -9,6 +9,7 @@ import static uk.ac.bris.cs.scotlandyard.model.Ticket.*;
 import java.util.*;
 import java.util.function.Consumer;
 
+import org.apache.commons.lang3.ObjectUtils;
 import uk.ac.bris.cs.gamekit.graph.Edge;
 import uk.ac.bris.cs.gamekit.graph.Graph;
 import uk.ac.bris.cs.gamekit.graph.ImmutableGraph;
@@ -470,14 +471,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public Optional<Integer> getPlayerTickets(Colour colour, Ticket ticket) {
-
-		for (ScotlandYardPlayer player : players) {
-			if (colour == player.colour())
-				return Optional.of(player.tickets().get(ticket));
-		}
-
-		return Optional.empty();
-
+		ScotlandYardPlayer player = colourMap.get(colour);
+		if (player == null) return Optional.empty();
+		return Optional.of(player.tickets().get(ticket));
 	}
 
 	@Override
