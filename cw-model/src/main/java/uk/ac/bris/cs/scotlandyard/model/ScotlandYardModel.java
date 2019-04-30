@@ -261,20 +261,60 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			spectators.remove(spectator);
 	}
 
+	private boolean isDetectiveOnSpace(int space) {
+		for (ScotlandYardPlayer player : players) {
+			if (player.colour() != BLACK && player.location() == space)
+				return true;
+		}
+		return false;
+	}
+
 	private Set<Move> validMoves(Colour colour) {
 
 		ScotlandYardPlayer player = colourMap.get(colour);
 		Node<Integer> playerNode = graph.getNode(player.location());
 		Set<Move> moves = new HashSet<>();
-
 		Move x = new PassMove(colour);
 
 		for (Edge<Integer, Transport> edge: graph.getEdgesFrom(playerNode)) {
+
 			Ticket ticket = Ticket.fromTransport(edge.data());
-			if (player.tickets().containsKey(ticket)) {
+
+			if (player.hasTickets(ticket)) {
+
 				int destination = edge.destination().value();
-				Move moveToAdd = new TicketMove(colour, ticket, destination);
-				moves.add(moveToAdd);
+
+				if (!isDetectiveOnSpace(destination)) {
+
+					Move moveToAdd = new TicketMove(colour, ticket, destination);
+
+					if (player.hasTickets(DOUBLE)) {
+
+						for (Edge<Integer, Transport> edge2: graph.getEdgesFrom(edge.destination())) {
+
+							TicketMove move1 = new TicketMove(colour, ticket, destination);
+							Ticket ticket2 = Ticket.fromTransport(edge2.data());
+
+							// Check player has correct tickets for double move,
+							// either 2 of the same or different according to move being tried,
+							// else moveToAdd remains unchanged and only single move is used.
+							if ((ticket.name().equals(ticket2.name()) && player.hasTickets(ticket, 2))
+									|| player.hasTickets(ticket2)) {
+
+								int destination2 = edge2.destination().value();
+								TicketMove move2 = new TicketMove(colour, ticket2, destination2);
+								moveToAdd = new DoubleMove(colour, move1, move2);
+
+							}
+
+						}
+
+					}
+
+					moves.add(moveToAdd);
+
+				}
+
 			}
 		}
 
