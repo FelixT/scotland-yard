@@ -347,7 +347,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 					moves.add(moveToAdd);
 				}
 
-				if (player.hasTickets(DOUBLE) && round <= rounds.size()) {
+				if (player.hasTickets(DOUBLE) && round < rounds.size()-2) {
 
 					for (Edge<Integer, Transport> edge2 : graph.getEdgesFrom(edge.destination())) {
 
