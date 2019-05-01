@@ -101,21 +101,28 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
-	private void checkGameOver() {
-        if(isGameOver())
-            for (Spectator spectator : spectators)
-                spectator.onGameOver(this, getWinningPlayers());
-    }
+    private void logicAfterMove() {
+		if(isGameOver())
+			for (Spectator spectator : spectators)
+				spectator.onGameOver(this, getWinningPlayers());
+		else {
+			if (currentPlayer == BLACK) {
+				for (Spectator spectator : spectators)
+					spectator.onRotationComplete(this);
+				System.out.println("On rotation complete");
+			}
+
+			// check if end of rotation
+
+			//startRotate();
+		}
+	}
 
 	@Override
     public void visit(PassMove move) {
         System.out.println("Pass move");
         nextPlayer();
         System.out.println("--Next player " + currentPlayer);
-
-        for (Spectator spectator: spectators)
-            spectator.onMoveMade(this, move);
-		System.out.println("On move made");
 
         if (wasmrx) {
             round++;
@@ -126,6 +133,12 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			System.out.println("On round started");
 
         }
+
+		for (Spectator spectator: spectators)
+			spectator.onMoveMade(this, move);
+		System.out.println("On move made");
+
+		logicAfterMove();
         //startRotate();
     }
 
@@ -168,19 +181,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			spectator.onMoveMade(this, specmove);
         System.out.println("On move made");
 
-        if(isGameOver()) {
-            checkGameOver();
-        } else {
-            nextPlayer();
-
-            // check if end of rotation
-            if(currentPlayer == BLACK) {
-                for (Spectator spectator: spectators)
-                    spectator.onRotationComplete(this);
-            }
-
-            System.out.println("--Next player " + currentPlayer);
-        }
+        nextPlayer();
+        System.out.println("--Next player" + currentPlayer);
+        logicAfterMove();
 
         //startRotate();
 	}
@@ -242,8 +245,14 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			spectator.onMoveMade(this, firstmove);
 		System.out.println("on first move made");
 
+		// next rounds starts after first move made
 		round++;
 		System.out.println("--Increased round" + round);
+
+		for (Spectator spectator : spectators)
+			spectator.onRoundStarted(this, round);
+		System.out.println("On round started");
+
 
 		// --SECOND MOVE--
 
@@ -257,15 +266,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
             lastMrX = secondmove.destination();
 
 		for (Spectator spectator : spectators)
-			spectator.onRoundStarted(this, round);
-		System.out.println("On round started");
-
-		for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, secondmove);
 		System.out.println("on second move made");
 
-        checkGameOver();
-        //startRotate();//whelp
+		logicAfterMove();
 	}
 
 	@Override
@@ -418,8 +422,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		for (ScotlandYardPlayer player : colourMap.values())
 			if (player.colour() == currentPlayer)
 				player.player().makeMove(this, player.location(), moves, this);
-
-		System.out.println("On rotation complete");
 	}
 
 	@Override
