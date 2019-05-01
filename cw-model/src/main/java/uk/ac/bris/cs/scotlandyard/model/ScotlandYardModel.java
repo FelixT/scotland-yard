@@ -329,7 +329,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 				if (player.hasTickets(DOUBLE) && round < 23) {
 
-					for (Edge<Integer, Transport> edge2: graph.getEdgesFrom(edge.destination())) {
+					for (Edge<Integer, Transport> edge2 : graph.getEdgesFrom(edge.destination())) {
 
 						TicketMove move1 = new TicketMove(colour, ticket, destination);
 						Ticket ticket2   = Ticket.fromTransport(edge2.data());
