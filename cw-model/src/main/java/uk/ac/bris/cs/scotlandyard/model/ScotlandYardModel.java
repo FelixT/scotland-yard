@@ -126,6 +126,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
                 spectator.onRoundStarted(this, round);
 
         }
+        startRotate();
     }
 
 	@Override
@@ -160,7 +161,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 				spectator.onRoundStarted(this, round);
 
 		}
-
+		startRotate();
 	}
 
 	@Override
@@ -267,6 +268,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		mrx.tickets().replace(DOUBLE, doubleticketsleft);
 
         checkGameOver();
+        startRotate();
 	}
 
 	@Override
@@ -397,7 +399,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	private void nextPlayer() {
 		// get current player index
 		int playerIndex = getPlayers().indexOf(currentPlayer);
-
 		int nextPlayer = (playerIndex + 1) % colourMap.size();
 
 		// get colour of next player
