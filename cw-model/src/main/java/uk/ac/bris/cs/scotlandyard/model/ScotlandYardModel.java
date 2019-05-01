@@ -26,7 +26,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	private Colour currentPlayer = BLACK;
 	private int lastMrX = 0;
 	private boolean wasmrx = false;
-	private Map<Colour, ScotlandYardPlayer> colourMap = new HashMap<>();
+	private Map<Colour, ScotlandYardPlayer> colourMap = new LinkedHashMap<>(); // used to guarantee order
 	private Set<Colour> winners = new HashSet<>();
 
 	public ScotlandYardModel(List<Boolean> rounds, Graph<Integer, Transport> graph,
@@ -130,22 +130,16 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	public void visit(TicketMove move) {
 		System.out.println("Ticket move, " + move.ticket());
 
-		for (ScotlandYardPlayer player : players) {
-			if (player.colour() == currentPlayer) {
-				player.location(move.destination());
-				// decrease number of tickets of player
-				int ticketsleft = player.tickets().get(move.ticket()) - 1;
-				player.tickets().replace(move.ticket(), ticketsleft);
-				if(currentPlayer != BLACK) {
-					// detectives transfer their tickets to mr x
-					for (ScotlandYardPlayer mrx : players) {
-						if (mrx.colour() == BLACK) {
-							int newtickets = mrx.tickets().get(move.ticket()) + 1;
-							mrx.tickets().replace(move.ticket(), newtickets);
-						}
-					}
-				}
-			}
+		ScotlandYardPlayer player = colourMap.get(currentPlayer);
+		player.location(move.destination());
+		// decrease number of tickets of player
+		int ticketsleft = player.tickets().get(move.ticket()) - 1;
+		player.tickets().replace(move.ticket(), ticketsleft);
+		if(currentPlayer != BLACK) {
+			// detectives transfer their tickets to mr x
+			ScotlandYardPlayer mrx = colourMap.get(BLACK);
+			int newtickets = mrx.tickets().get(move.ticket()) + 1;
+			mrx.tickets().replace(move.ticket(), newtickets);
 		}
 		nextPlayer();
 		System.out.println("Next player " + currentPlayer);
@@ -226,15 +220,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			spectator.onRoundStarted(this, round);
 
 
-		for (ScotlandYardPlayer player : players) {
-			if (player.colour() == BLACK) {
+		ScotlandYardPlayer mrx = colourMap.get(BLACK);
 				// decrease number of tickets of player
-				int ticketsleft = player.tickets().get(move.firstMove().ticket()) - 1;
-				player.tickets().replace(move.firstMove().ticket(), ticketsleft);
-				player.location(move.firstMove().destination());
-
-			}
-		}
+		int ticketsleft = mrx.tickets().get(move.firstMove().ticket()) - 1;
+		mrx.tickets().replace(move.firstMove().ticket(), ticketsleft);
+		mrx.location(move.firstMove().destination());
 
         checkGameOver();
 
@@ -243,16 +233,12 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, secondmove);
 
-		for (ScotlandYardPlayer player : players) {
-			if (player.colour() == BLACK) {
-				player.location(move.secondMove().destination());
-				// decrease number of tickets of player
-				int ticketsleft = player.tickets().get(move.secondMove().ticket()) - 1;
-				player.tickets().replace(move.secondMove().ticket(), ticketsleft);
-				int doubleticketsleft = player.tickets().get(DOUBLE) - 1;
-				player.tickets().replace(DOUBLE, doubleticketsleft);
-			}
-		}
+		mrx.location(move.secondMove().destination());
+		// decrease number of tickets of player
+		ticketsleft = mrx.tickets().get(move.secondMove().ticket()) - 1;
+		mrx.tickets().replace(move.secondMove().ticket(), ticketsleft);
+		int doubleticketsleft = mrx.tickets().get(DOUBLE) - 1;
+		mrx.tickets().replace(DOUBLE, doubleticketsleft);
 
         checkGameOver();
 	}
@@ -294,7 +280,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	}
 
 	private boolean noDetectiveOnSpace(int space) {
-		for (ScotlandYardPlayer player : players)
+		for (ScotlandYardPlayer player : colourMap.values())
 			if (player.colour() != BLACK && player.location() == space)
 				return false;
 		return true;
@@ -379,7 +365,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			moves.add(moveToAdd);
 		}
 
-		System.out.println(moves);
+		//System.out.println(moves);
 		return moves;
 
 	}
@@ -388,14 +374,14 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		// get current player index
 		int playerIndex = 0;
 
-		for (ScotlandYardPlayer player : players) {
+		for (ScotlandYardPlayer player : colourMap.values()) {
 			if (player.colour() != currentPlayer)
 				playerIndex++;
 			else
 				break;
 		}
 
-		int nextPlayer = (playerIndex + 1) % players.size();
+		int nextPlayer = (playerIndex + 1) % colourMap.size();
 
 		// get colour of next player
 		currentPlayer = players.get(nextPlayer).colour();
@@ -416,9 +402,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
         Set<Move> moves = validMoves(currentPlayer);
 
 		System.out.println("Make move");
-
-		ScotlandYardPlayer player = colourMap.get(currentPlayer);
-		player.player().makeMove(this, player.location(), moves, this);
+		for (ScotlandYardPlayer player : colourMap.values())
+			if (player.colour() == currentPlayer)
+				player.player().makeMove(this, player.location(), moves, this);
 
 		System.out.println("On rotation complete");
 
@@ -436,7 +422,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		List<Colour> playerColours = new ArrayList<>();
 
-		for (ScotlandYardPlayer player : players)
+		for (ScotlandYardPlayer player : colourMap.values())
 			playerColours.add(Objects.requireNonNull(player.colour()));
 
 		return Collections.unmodifiableList(playerColours);
@@ -451,19 +437,20 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public Optional<Integer> getPlayerLocation(Colour colour) {
+		if(colourMap.containsKey(colour)) { // if exists
+			ScotlandYardPlayer player = colourMap.get(colour);
+			if (colour == BLACK) {
+				if (round != 0 && rounds.get(round - 1)) { // if its a reveal round give location
+					lastMrX = player.location();
+					return Optional.of(player.location());
+				} else  // otherwise return 0
+					return Optional.of(lastMrX);
 
-		ScotlandYardPlayer player = colourMap.get(colour);
+			}
+			return Optional.of(player.location());
+		} else
+			return Optional.empty();
 
-		if (colour == BLACK) {
-			if(round != 0 && rounds.get(round - 1)) { // if its a reveal round give location
-				lastMrX = player.location();
-				return Optional.of(player.location());
-			} else  // otherwise return 0
-				return Optional.of(lastMrX);
-		}
-
-		if (player == null) return Optional.empty();
-		return Optional.of(player.location());
 	}
 
 	@Override
@@ -482,7 +469,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		boolean nomoves = true;
 		boolean mrxstuck = validMoves(BLACK).isEmpty();
 
-		for (ScotlandYardPlayer player : players) {
+		for (ScotlandYardPlayer player : colourMap.values()) {
 			// check if detective in same position as mr x
 			if (player.colour() != BLACK && player.location() == mrxposition) {
 				playerinmrxposition = true;
@@ -497,7 +484,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		if(playerinmrxposition || mrxstuck) {
 			// all detectives win
-			for (ScotlandYardPlayer player : players)
+			for (ScotlandYardPlayer player : colourMap.values())
 				if (player.colour() != BLACK)
 					winners.add(player.colour());
 		} else if(roundsexceeded || nomoves) {
