@@ -389,7 +389,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			}
 		}
 
-		if (player.colour() != BLACK && moves.isEmpty()) {
+		if (moves.isEmpty()) {
 			moveToAdd = new PassMove(colour);
 			moves.add(moveToAdd);
 		}
