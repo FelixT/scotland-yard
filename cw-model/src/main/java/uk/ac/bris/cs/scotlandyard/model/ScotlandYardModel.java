@@ -309,22 +309,27 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		Set<Move> moves = new HashSet<>();
 		Move pass = new PassMove(colour);
 
+		System.out.println("--------------------------");
+		System.out.println(colour);
+		System.out.println("--------------------------");
+
 		for (Edge<Integer, Transport> edge : graph.getEdgesFrom(playerNode)) {
 
 			Ticket ticket = Ticket.fromTransport(edge.data());
 			int destination = edge.destination().value();
 
 			Move maybeSecretAdd = new TicketMove(colour, SECRET, destination);
-
-			if (colour == BLACK && player.hasTickets(SECRET))
+			if (player.hasTickets(SECRET))
 				moves.add(maybeSecretAdd);
 
 			if (player.hasTickets(ticket) && noDetectiveOnSpace(destination)) {
 
 				Move moveToAdd = new TicketMove(colour, ticket, destination);
 				moves.add(moveToAdd);
+				System.out.print(ticket);
+				System.out.println(destination);
 
-				if (player.hasTickets(DOUBLE)) {
+				if (player.hasTickets(DOUBLE) && round < 21) {
 
 					for (Edge<Integer, Transport> edge2: graph.getEdgesFrom(edge.destination())) {
 
@@ -363,21 +368,17 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 									moveToAdd = new DoubleMove(colour, move1sec, move2sec);
 									moves.add(moveToAdd);
 								}
-
 							}
-
 						}
-
 					}
-
 				}
-
 			}
-
 		}
 
-		if (player.colour() != BLACK && moves.isEmpty())
+		if (player.colour() != BLACK && moves.isEmpty()) {
 			moves.add(pass);
+			System.out.println("added PASS");
+		}
 
 		return moves;
 
@@ -403,6 +404,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public void startRotate() {
+
 		if(isGameOver()) {
 			throw new IllegalStateException("Can't start new round when the game is already over");
 		}
