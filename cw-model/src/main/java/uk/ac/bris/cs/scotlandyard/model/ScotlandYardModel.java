@@ -102,20 +102,16 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	}
 
     private void logicAfterMove() {
-		if(isGameOver())
-			for (Spectator spectator : spectators)
-				spectator.onGameOver(this, getWinningPlayers());
-		else {
 			if (currentPlayer == BLACK) {
-				for (Spectator spectator : spectators)
-					spectator.onRotationComplete(this);
-				System.out.println("On rotation complete");
+                if(isGameOver()) {
+                    for (Spectator spectator : spectators)
+                        spectator.onGameOver(this, getWinningPlayers());
+                } else {
+                    for (Spectator spectator : spectators)
+                        spectator.onRotationComplete(this);
+                    System.out.println("On rotation complete");
+                }
 			}
-
-			// check if end of rotation
-
-			//startRotate();
-		}
 	}
 
 	@Override
@@ -124,7 +120,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
         nextPlayer();
         System.out.println("--Next player " + currentPlayer);
 
-        if (wasmrx) {
+        if (wasmrx) { // quite possibly redundant
             round++;
             System.out.println("--Increased round " + round);
 
@@ -168,7 +164,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			mrx.tickets().replace(move.ticket(), newtickets);
 		}
 
-        if (wasmrx) {
+        if (wasmrx) { // quite possibly redundant
             round++;
             System.out.println("Increased round " + round);
 
@@ -197,8 +193,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		TicketMove firstmove = move.firstMove();
 		TicketMove secondmove = move.secondMove();
 
-		boolean revealOne = rounds.get(round);
-		boolean revealTwo = rounds.get(round + 1);
+		boolean revealOne = (rounds.size() > round) && rounds.get(round);
+		boolean revealTwo = (rounds.size() > round) && rounds.get(round + 1);
 
         if (!revealOne && revealTwo)
             firstmove = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), lastMrX);
