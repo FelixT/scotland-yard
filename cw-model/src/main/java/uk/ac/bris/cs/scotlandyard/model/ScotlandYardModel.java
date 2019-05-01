@@ -111,14 +111,16 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 					spectator.onRotationComplete(this);
 				System.out.println("On rotation complete");
 
+				startRotate();
 
-				Set<Move> moves = validMoves(currentPlayer);
-				System.out.println("Make move");
-				for (ScotlandYardPlayer player : colourMap.values())
-					if (player.colour() == currentPlayer)
-						player.player().makeMove(this, player.location(), moves, this);
 			}
 		}
+
+		Set<Move> moves = validMoves(currentPlayer);
+		System.out.println("Make move");
+		for (ScotlandYardPlayer player : colourMap.values())
+			if (player.colour() == currentPlayer)
+				player.player().makeMove(this, player.location(), moves, this);
 	}
 
 	@Override
