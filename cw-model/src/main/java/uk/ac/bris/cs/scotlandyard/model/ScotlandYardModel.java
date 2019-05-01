@@ -483,7 +483,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		ScotlandYardPlayer mrx = colourMap.get(BLACK);
 		int mrxposition = mrx.location();
 		boolean nomoves = true;
-		boolean mrxstuck = validMoves(BLACK).isEmpty() && currentPlayer == BLACK;
+		boolean mrxstuck = (validMoves(BLACK).iterator().next() instanceof PassMove) && currentPlayer == BLACK;
 
 		for (ScotlandYardPlayer player : colourMap.values()) {
 			// check if detective in same position as mr x
