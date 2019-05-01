@@ -123,7 +123,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
     public void visit(PassMove move) {
         System.out.println("Pass move");
 
-        if (wasmrx) { // quite possibly redundant
+        if (currentPlayer == BLACK) { // quite possibly redundant
             round++;
             System.out.println("--Increased round " + round);
 
@@ -170,6 +170,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			mrx.tickets().replace(move.ticket(), newtickets);
 		}
 
+		nextPlayer();
+
         if (wasmrx) { // quite possibly redundant
             round++;
             System.out.println("Increased round " + round);
@@ -178,8 +180,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
                 spectator.onRoundStarted(this, round);
             System.out.println("On round started");
         }
-
-        nextPlayer();
 
         for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, specmove);
