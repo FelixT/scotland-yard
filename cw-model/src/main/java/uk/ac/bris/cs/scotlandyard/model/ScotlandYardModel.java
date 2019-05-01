@@ -305,21 +305,28 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		ScotlandYardPlayer player = colourMap.get(colour);
 		Node<Integer> playerNode = graph.getNode(player.location());
 		Set<Move> moves = new HashSet<>();
-		Move pass = new PassMove(colour);
+		Move moveToAdd;
+
+		// TODO
+		// testDetectiveMovesOmittedIfNotEnoughTickets fails because mr X isn't
+		// given taxi->86 as an option, not stated reason.
 
 		for (Edge<Integer, Transport> edge : graph.getEdgesFrom(playerNode)) {
 
 			Ticket ticket = Ticket.fromTransport(edge.data());
 			int destination = edge.destination().value();
 
-			Move maybeSecretAdd = new TicketMove(colour, SECRET, destination);
-			if (player.hasTickets(SECRET) && noDetectiveOnSpace(destination))
-				moves.add(maybeSecretAdd);
+			if ((player.hasTickets(ticket) || player.hasTickets(SECRET)) && noDetectiveOnSpace(destination)) {
 
-			if (player.hasTickets(ticket) && noDetectiveOnSpace(destination)) {
+				if (player.hasTickets(ticket)) {
+					moveToAdd = new TicketMove(colour, ticket, destination);
+					moves.add(moveToAdd);
+				}
 
-				Move moveToAdd = new TicketMove(colour, ticket, destination);
-				moves.add(moveToAdd);
+				if (player.hasTickets(SECRET)) {
+					moveToAdd = new TicketMove(colour, SECRET, destination);
+					moves.add(moveToAdd);
+				}
 
 				if (player.hasTickets(DOUBLE) && round < 21) {
 
@@ -368,8 +375,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		}
 
 		if (player.colour() != BLACK && moves.isEmpty()) {
-			moves.add(pass);
-			System.out.println("added PASS");
+			moveToAdd = new PassMove(colour);
+			moves.add(moveToAdd);
 		}
 
 		System.out.println(moves);
