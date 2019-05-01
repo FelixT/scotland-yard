@@ -308,6 +308,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		Set<Move> moves = new HashSet<>();
 		Move moveToAdd;
 
+		// TODO
+		// testDetectiveMovesOmittedIfNotEnoughTickets fails because mr X isn't
+		// given taxi->86 as an option, not stated reason.
+
 		for (Edge<Integer, Transport> edge : graph.getEdgesFrom(playerNode)) {
 
 			Ticket ticket = Ticket.fromTransport(edge.data());
