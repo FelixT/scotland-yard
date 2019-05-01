@@ -289,19 +289,17 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	private Set<Move> validMoves(Colour colour) {
 
 		ScotlandYardPlayer player = colourMap.get(colour);
-		Node<Integer> playerNode = graph.getNode(player.location());
+		System.out.println("colour = " + colour);
+		Node<Integer> playerNode  = graph.getNode(player.location());
+		System.out.println("player.location() = " + player.location());
 		Set<Move> moves = new HashSet<>();
 		Move moveToAdd;
-
-		// TODO
-		// testDetectiveMovesOmittedIfNotEnoughTickets fails because mr X isn't
-		// given taxi->86 as an option, not stated reason.
 
 		for (Edge<Integer, Transport> edge : graph.getEdgesFrom(playerNode)) {
 
 			Ticket ticket = Ticket.fromTransport(edge.data());
 			int destination = edge.destination().value();
-
+		
 			if ((player.hasTickets(ticket) || player.hasTickets(SECRET)) && noDetectiveOnSpace(destination)) {
 
 				if (player.hasTickets(ticket)) {
@@ -314,9 +312,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 					moves.add(moveToAdd);
 				}
 
-				if (player.hasTickets(DOUBLE) && round < 21) {
+				if (player.hasTickets(DOUBLE) && round < 23) {
 
-					for (Edge<Integer, Transport> edge2: graph.getEdgesFrom(edge.destination())) {
+					for (Edge<Integer, Transport> edge2 : graph.getEdgesFrom(edge.destination())) {
 
 						TicketMove move1 = new TicketMove(colour, ticket, destination);
 						Ticket ticket2   = Ticket.fromTransport(edge2.data());
