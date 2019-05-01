@@ -268,7 +268,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		mrx.tickets().replace(DOUBLE, doubleticketsleft);
 
         checkGameOver();
-        startRotate();
+        startRotate();//whelp
 	}
 
 	@Override
