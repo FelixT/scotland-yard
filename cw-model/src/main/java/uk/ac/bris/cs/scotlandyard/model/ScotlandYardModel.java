@@ -117,8 +117,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	@Override
     public void visit(PassMove move) {
         System.out.println("Pass move");
-        nextPlayer();
-        System.out.println("--Next player " + currentPlayer);
 
         if (wasmrx) { // quite possibly redundant
             round++;
@@ -130,11 +128,16 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
         }
 
-		for (Spectator spectator: spectators)
+        nextPlayer();
+
+        for (Spectator spectator: spectators)
 			spectator.onMoveMade(this, move);
 		System.out.println("On move made");
 
-		logicAfterMove();
+        System.out.println("--Next player " + currentPlayer);
+
+
+        logicAfterMove();
         //startRotate();
     }
 
@@ -173,11 +176,12 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
             System.out.println("On round started");
         }
 
-		for (Spectator spectator : spectators)
+        nextPlayer();
+
+        for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, specmove);
         System.out.println("On move made");
 
-        nextPlayer();
         System.out.println("--Next player" + currentPlayer);
         logicAfterMove();
 
