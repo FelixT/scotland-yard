@@ -224,36 +224,30 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			spectator.onMoveMade(this, specmove);
         System.out.println("on overall move made");
 
-		round++;
-		System.out.println("--Increased round " + round);
-
 		// -- FIRST MOVE --
 
 		// MrX loses ticket used for their first move
 		int ticketsleft = mrx.tickets().get(move.firstMove().ticket()) - 1;
 		mrx.tickets().replace(move.firstMove().ticket(), ticketsleft);
 
+		mrx.location(move.firstMove().destination());
+
+		round++;
+		System.out.println("--Increased round " + round);
+
+		// if either round is hidden we display the location as mrX's last known location instead
+		if (revealOne)
+			lastMrX = firstmove.destination();
+
 		for (Spectator spectator : spectators)
 			spectator.onRoundStarted(this, round);
 		System.out.println("On round started");
 
-		mrx.location(move.firstMove().destination());
 
-		// if either round is hidden we display the location as mrX's last known location instead
-        if (revealOne)
-            lastMrX = firstmove.destination();
 
 		for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, firstmove);
 		System.out.println("on first move made");
-
-		// next rounds starts after first move made
-		round++;
-		System.out.println("--Increased round" + round);
-
-		for (Spectator spectator : spectators)
-			spectator.onRoundStarted(this, round);
-		System.out.println("On round started");
 
 		// --SECOND MOVE--
 
@@ -262,9 +256,19 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		mrx.tickets().replace(move.secondMove().ticket(), ticketsleft);
 
 		mrx.location(move.secondMove().destination());
-        // if either round is hidden we display the location as mrX's last known location instead
-        if (revealTwo)
-            lastMrX = secondmove.destination();
+		// if either round is hidden we display the location as mrX's last known location instead
+		if (revealTwo)
+			lastMrX = secondmove.destination();
+
+		// next rounds starts after first move made
+		round++;
+		System.out.println("--Increased round" + round);
+
+
+		for (Spectator spectator : spectators)
+			spectator.onRoundStarted(this, round);
+		System.out.println("On round started");
+
 
 		for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, secondmove);
