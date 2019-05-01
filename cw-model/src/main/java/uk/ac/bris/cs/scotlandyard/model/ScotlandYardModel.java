@@ -107,11 +107,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 				for (Spectator spectator : spectators)
 					spectator.onGameOver(this, getWinningPlayers());
 			} else {
+
 				for (Spectator spectator : spectators)
 					spectator.onRotationComplete(this);
 				System.out.println("On rotation complete");
-
-				startRotate();
 
 			}
 		} else {
