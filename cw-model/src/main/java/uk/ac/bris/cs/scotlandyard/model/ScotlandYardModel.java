@@ -146,9 +146,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
         System.out.println("--Next player " + currentPlayer);
 
-
         logicAfterMove();
-        //startRotate();
+
     }
 
 	@Override
@@ -263,7 +262,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			spectator.onRoundStarted(this, round);
 		System.out.println("On round started");
 
-
 		// --SECOND MOVE--
 
 		// decrease number of tickets for second move
@@ -293,9 +291,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		Set<Move> validMoves = validMoves(currentPlayer);
 
-		//if (!validMoves.contains(move)) {
-			//throw new IllegalArgumentException("Invalid move");
-		//}
+		if (!validMoves.contains(move)) {
+			throw new IllegalArgumentException("Invalid move");
+		}
 
 		move.visit(this);
 	}
@@ -349,7 +347,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 					moves.add(moveToAdd);
 				}
 
-				if (player.hasTickets(DOUBLE) && round < 23) {
+				if (player.hasTickets(DOUBLE) && round <= rounds.size()) {
 
 					for (Edge<Integer, Transport> edge2 : graph.getEdgesFrom(edge.destination())) {
 
