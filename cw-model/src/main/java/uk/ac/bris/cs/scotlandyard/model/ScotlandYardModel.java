@@ -296,8 +296,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	private boolean noDetectiveOnSpace(int space) {
 		for (ScotlandYardPlayer player : players) {
-			if (player.colour() != BLACK && player.location() == space)
+			if (player.colour() != BLACK && player.location() == space) {
+				System.out.print("Detective at ");
+				System.out.println(space);
 				return false;
+			}
 		}
 		return true;
 	}
@@ -309,25 +312,19 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		Set<Move> moves = new HashSet<>();
 		Move pass = new PassMove(colour);
 
-		System.out.println("--------------------------");
-		System.out.println(colour);
-		System.out.println("--------------------------");
-
 		for (Edge<Integer, Transport> edge : graph.getEdgesFrom(playerNode)) {
 
 			Ticket ticket = Ticket.fromTransport(edge.data());
 			int destination = edge.destination().value();
 
 			Move maybeSecretAdd = new TicketMove(colour, SECRET, destination);
-			if (player.hasTickets(SECRET))
+			if (player.hasTickets(SECRET) && noDetectiveOnSpace(destination))
 				moves.add(maybeSecretAdd);
 
 			if (player.hasTickets(ticket) && noDetectiveOnSpace(destination)) {
 
 				Move moveToAdd = new TicketMove(colour, ticket, destination);
 				moves.add(moveToAdd);
-				System.out.print(ticket);
-				System.out.println(destination);
 
 				if (player.hasTickets(DOUBLE) && round < 21) {
 
@@ -380,6 +377,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			System.out.println("added PASS");
 		}
 
+		System.out.println(moves);
 		return moves;
 
 	}
