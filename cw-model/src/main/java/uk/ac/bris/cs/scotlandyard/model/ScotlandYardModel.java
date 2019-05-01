@@ -133,8 +133,18 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	public void visit(TicketMove move) {
 		System.out.println("Ticket move, " + move.ticket());
 
+		TicketMove specmove = move;
+		// if it's not a reveal round we give mrX's last known location, otherwise set last known location
+		if(rounds.size() > round && currentPlayer == BLACK) {
+            if (rounds.get(round))
+                lastMrX = specmove.destination();
+            else
+                specmove = new TicketMove(move.colour(), move.ticket(), lastMrX);
+        }
+
 		ScotlandYardPlayer player = colourMap.get(currentPlayer);
 		player.location(move.destination());
+
 		// decrease number of tickets of player
 		int ticketsleft = player.tickets().get(move.ticket()) - 1;
 		player.tickets().replace(move.ticket(), ticketsleft);
@@ -144,23 +154,35 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			int newtickets = mrx.tickets().get(move.ticket()) + 1;
 			mrx.tickets().replace(move.ticket(), newtickets);
 		}
-		nextPlayer();
-		System.out.println("--Next player " + currentPlayer);
 
-		System.out.println("On move made");
+        if (wasmrx) {
+            round++;
+            System.out.println("Increased round " + round);
+
+            for (Spectator spectator : spectators)
+                spectator.onRoundStarted(this, round);
+            System.out.println("On round started");
+        }
+
 		for (Spectator spectator : spectators)
-			spectator.onMoveMade(this, move);
-		checkGameOver();
+			spectator.onMoveMade(this, specmove);
+        System.out.println("On move made");
 
-		if (wasmrx) {
-			round++;
-			System.out.println("Increased round " + round);
+        if(isGameOver()) {
+            checkGameOver();
+        } else {
+            nextPlayer();
 
-			for (Spectator spectator : spectators)
-				spectator.onRoundStarted(this, round);
-			System.out.println("On round started");
-		}
-		//startRotate();
+            // check if end of rotation
+            if(currentPlayer == BLACK) {
+                for (Spectator spectator: spectators)
+                    spectator.onRotationComplete(this);
+            }
+
+            System.out.println("--Next player " + currentPlayer);
+        }
+
+        //startRotate();
 	}
 
 	@Override
@@ -172,70 +194,37 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		TicketMove firstmove = move.firstMove();
 		TicketMove secondmove = move.secondMove();
 
-		/*
-			TODO: WARNING, This is likely to break spectator notifications and the order of Mr X's last known location
-			being updated, since some tests expect that the notification for a move only happens after his location has
-			been incrementally updated.
+		boolean revealOne = rounds.get(round);
+		boolean revealTwo = rounds.get(round + 1);
 
-			As in,
-
-			notify on first move
-			location update -- location is checked
-			notify on second move
-			location update -- locaton is checked
-
-			What this code is doing is it will immediately update is location to the final destination of the double,
-			which will likely fail playout tests.
-		 */
-
-		if(rounds.size() > round) {
-            // check if going from reveal to non reveal
-			boolean revealOne = rounds.get(round);
-			boolean revealTwo = rounds.get(round + 1);
-            if (!revealOne && revealTwo) {
-                // if it is, set the first destination to 0
-                firstmove = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), lastMrX);
-                lastMrX = secondmove.destination();
-            }
-            // check if going from non reveal to reveal
-            if (revealOne && !revealTwo) {
-                // if it is, set the second destination to the destination of the first
-	            lastMrX = firstmove.destination();
-                secondmove = new TicketMove(move.secondMove().colour(), move.secondMove().ticket(), move.firstMove().destination());
-            }
-            // if both rounds are hidden, set both to 0
-            if (!revealOne && !revealTwo) {
-                firstmove = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), lastMrX);
-                secondmove = new TicketMove(move.secondMove().colour(), move.secondMove().ticket(), lastMrX);
-            }
-            if (revealOne && revealTwo) {
-            	// big hecky wecky (pls see above pardner)
-            	lastMrX = secondmove.destination();
-            }
+        if (!revealOne && revealTwo)
+            firstmove = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), lastMrX);
+        if (revealOne && !revealTwo)
+            secondmove = new TicketMove(move.secondMove().colour(), move.secondMove().ticket(), firstmove.destination());
+        if (!revealOne && !revealTwo) {
+            firstmove = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), lastMrX);
+            secondmove = new TicketMove(move.secondMove().colour(), move.secondMove().ticket(), lastMrX);
         }
+
         DoubleMove specmove = new DoubleMove(currentPlayer, firstmove, secondmove);
-
-
-
-        // perform logic to do moves
 
 		nextPlayer();
 		System.out.println("--Next player " + currentPlayer);
 
-		System.out.println("on overall move made");
-
-		// decrease double tickets
+		// decrease number of double tickets in mrX's posession
 		int doubleticketsleft = mrx.tickets().get(DOUBLE) - 1;
 		mrx.tickets().replace(DOUBLE, doubleticketsleft);
 
 		for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, specmove);
-
+        System.out.println("on overall move made");
 
 		round++;
 		System.out.println("--Increased round " + round);
 
-		// decrease tickets from first move
+		// -- FIRST MOVE --
+
+		// MrX loses ticket used for their first move
 		int ticketsleft = mrx.tickets().get(move.firstMove().ticket()) - 1;
 		mrx.tickets().replace(move.firstMove().ticket(), ticketsleft);
 
@@ -245,6 +234,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		mrx.location(move.firstMove().destination());
 
+		// if either round is hidden we display the location as mrX's last known location instead
+        if (revealOne)
+            lastMrX = firstmove.destination();
+
 		for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, firstmove);
 		System.out.println("on first move made");
@@ -252,16 +245,20 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		round++;
 		System.out.println("--Increased round" + round);
 
+		// --SECOND MOVE--
+
 		// decrease number of tickets for second move
 		ticketsleft = mrx.tickets().get(move.secondMove().ticket()) - 1;
 		mrx.tickets().replace(move.secondMove().ticket(), ticketsleft);
+
 		mrx.location(move.secondMove().destination());
+        // if either round is hidden we display the location as mrX's last known location instead
+        if (revealTwo)
+            lastMrX = secondmove.destination();
 
 		for (Spectator spectator : spectators)
 			spectator.onRoundStarted(this, round);
 		System.out.println("On round started");
-
-        checkGameOver();
 
 		for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, secondmove);
@@ -423,10 +420,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 				player.player().makeMove(this, player.location(), moves, this);
 
 		System.out.println("On rotation complete");
-
-		if(!isGameOver())
-			for (Spectator spectator: spectators)
-				spectator.onRotationComplete(this);
 	}
 
 	@Override
