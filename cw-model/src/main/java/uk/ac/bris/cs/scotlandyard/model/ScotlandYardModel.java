@@ -113,9 +113,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
             Set<Move> moves = validMoves(currentPlayer);
             System.out.println("Make move");
-            for (ScotlandYardPlayer player : colourMap.values())
-                if (player.colour() == currentPlayer)
-                    player.player().makeMove(this, player.location(), moves, this);
+            ScotlandYardPlayer player = colourMap.get(currentPlayer);
+            player.player().makeMove(this, player.location(), moves, this);
         }
     }
 
@@ -142,7 +141,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
         System.out.println("--Next player " + currentPlayer);
 
-        logicAfterMove();
 
     }
 
@@ -188,7 +186,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
         System.out.println("On move made");
 
         System.out.println("--Next player" + currentPlayer);
-        logicAfterMove();
 
         //startRotate();
 	}
@@ -273,7 +270,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			spectator.onMoveMade(this, secondmove);
 		System.out.println("on second move made");
 
-		logicAfterMove();
 	}
 
 	@Override
@@ -292,6 +288,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		}
 
 		move.visit(this);
+
+		logicAfterMove();
+
 	}
 
 	@Override
@@ -423,9 +422,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
         Set<Move> moves = validMoves(currentPlayer);
 
 		System.out.println("Make move");
-		for (ScotlandYardPlayer player : colourMap.values())
-			if (player.colour() == currentPlayer)
-				player.player().makeMove(this, player.location(), moves, this);
+		ScotlandYardPlayer player = colourMap.get(currentPlayer);
+		player.player().makeMove(this, player.location(), moves, this);
 	}
 
 	@Override
