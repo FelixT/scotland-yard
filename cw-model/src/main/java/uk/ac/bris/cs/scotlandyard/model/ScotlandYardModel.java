@@ -102,26 +102,23 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	}
 
     private void logicAfterMove() {
-		if (currentPlayer == BLACK) {
-			if(isGameOver()) {
-				for (Spectator spectator : spectators)
-					spectator.onGameOver(this, getWinningPlayers());
-			} else {
+        if(isGameOver()) {
+            for (Spectator spectator : spectators)
+                spectator.onGameOver(this, getWinningPlayers());
+        } else if (currentPlayer == BLACK) {
+            for (Spectator spectator : spectators)
+                spectator.onRotationComplete(this);
+            System.out.println("On rotation complete");
+        } else {
 
-				for (Spectator spectator : spectators)
-					spectator.onRotationComplete(this);
-				System.out.println("On rotation complete");
+            Set<Move> moves = validMoves(currentPlayer);
+            System.out.println("Make move");
+            for (ScotlandYardPlayer player : colourMap.values())
+                if (player.colour() == currentPlayer)
+                    player.player().makeMove(this, player.location(), moves, this);
+        }
+    }
 
-			}
-		} else {
-
-			Set<Move> moves = validMoves(currentPlayer);
-			System.out.println("Make move");
-			for (ScotlandYardPlayer player : colourMap.values())
-				if (player.colour() == currentPlayer)
-					player.player().makeMove(this, player.location(), moves, this);
-		}
-	}
 
 	@Override
     public void visit(PassMove move) {
