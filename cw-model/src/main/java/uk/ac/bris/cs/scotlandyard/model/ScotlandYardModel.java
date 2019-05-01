@@ -114,13 +114,14 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 				startRotate();
 
 			}
-		}
+		} else {
 
-		Set<Move> moves = validMoves(currentPlayer);
-		System.out.println("Make move");
-		for (ScotlandYardPlayer player : colourMap.values())
-			if (player.colour() == currentPlayer)
-				player.player().makeMove(this, player.location(), moves, this);
+			Set<Move> moves = validMoves(currentPlayer);
+			System.out.println("Make move");
+			for (ScotlandYardPlayer player : colourMap.values())
+				if (player.colour() == currentPlayer)
+					player.player().makeMove(this, player.location(), moves, this);
+		}
 	}
 
 	@Override
