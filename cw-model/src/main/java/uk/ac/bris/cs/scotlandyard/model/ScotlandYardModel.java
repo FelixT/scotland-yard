@@ -111,22 +111,22 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
     public void visit(PassMove move) {
         System.out.println("Pass move");
         nextPlayer();
-        System.out.println("Next player " + currentPlayer);
+        System.out.println("--Next player " + currentPlayer);
 
-        System.out.println("On move made");
         for (Spectator spectator: spectators)
             spectator.onMoveMade(this, move);
+		System.out.println("On move made");
 
         if (wasmrx) {
             round++;
-            System.out.println("Increased round");
-            System.out.println("On round started");
+            System.out.println("--Increased round " + round);
 
             for (Spectator spectator : spectators)
                 spectator.onRoundStarted(this, round);
+			System.out.println("On round started");
 
         }
-        startRotate();
+        //startRotate();
     }
 
 	@Override
@@ -145,7 +145,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			mrx.tickets().replace(move.ticket(), newtickets);
 		}
 		nextPlayer();
-		System.out.println("Next player " + currentPlayer);
+		System.out.println("--Next player " + currentPlayer);
 
 		System.out.println("On move made");
 		for (Spectator spectator : spectators)
@@ -154,19 +154,20 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		if (wasmrx) {
 			round++;
-			System.out.println("Increased round");
-			System.out.println("On round started");
+			System.out.println("Increased round " + round);
 
 			for (Spectator spectator : spectators)
 				spectator.onRoundStarted(this, round);
-
+			System.out.println("On round started");
 		}
-		startRotate();
+		//startRotate();
 	}
 
 	@Override
 	public void visit(DoubleMove move) {
 		System.out.println("double move");
+
+		ScotlandYardPlayer mrx = colourMap.get(BLACK);
 
 		TicketMove firstmove = move.firstMove();
 		TicketMove secondmove = move.secondMove();
@@ -219,56 +220,55 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
         // perform logic to do moves
 
 		nextPlayer();
-		System.out.println("Next player " + currentPlayer);
+		System.out.println("--Next player " + currentPlayer);
 
-		System.out.println("on move made");
+		System.out.println("on overall move made");
+
+		// decrease double tickets
+		int doubleticketsleft = mrx.tickets().get(DOUBLE) - 1;
+		mrx.tickets().replace(DOUBLE, doubleticketsleft);
 
 		for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, specmove);
 
 
 		round++;
-		System.out.println("Increased round");
-		System.out.println("On round started");
+		System.out.println("--Increased round " + round);
+
+		// decrease tickets from first move
+		int ticketsleft = mrx.tickets().get(move.firstMove().ticket()) - 1;
+		mrx.tickets().replace(move.firstMove().ticket(), ticketsleft);
 
 		for (Spectator spectator : spectators)
 			spectator.onRoundStarted(this, round);
+		System.out.println("On round started");
 
-		System.out.println("on first move made");
+		mrx.location(move.firstMove().destination());
 
 		for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, firstmove);
+		System.out.println("on first move made");
 
 		round++;
-		System.out.println("Increased round");
-		System.out.println("On round started");
+		System.out.println("--Increased round" + round);
+
+		// decrease number of tickets for second move
+		ticketsleft = mrx.tickets().get(move.secondMove().ticket()) - 1;
+		mrx.tickets().replace(move.secondMove().ticket(), ticketsleft);
+		mrx.location(move.secondMove().destination());
 
 		for (Spectator spectator : spectators)
 			spectator.onRoundStarted(this, round);
-
-
-		ScotlandYardPlayer mrx = colourMap.get(BLACK);
-				// decrease number of tickets of player
-		int ticketsleft = mrx.tickets().get(move.firstMove().ticket()) - 1;
-		mrx.tickets().replace(move.firstMove().ticket(), ticketsleft);
-		mrx.location(move.firstMove().destination());
+		System.out.println("On round started");
 
         checkGameOver();
-
-		System.out.println("on second move made");
 
 		for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, secondmove);
-
-		mrx.location(move.secondMove().destination());
-		// decrease number of tickets of player
-		ticketsleft = mrx.tickets().get(move.secondMove().ticket()) - 1;
-		mrx.tickets().replace(move.secondMove().ticket(), ticketsleft);
-		int doubleticketsleft = mrx.tickets().get(DOUBLE) - 1;
-		mrx.tickets().replace(DOUBLE, doubleticketsleft);
+		System.out.println("on second move made");
 
         checkGameOver();
-        startRotate();//whelp
+        //startRotate();//whelp
 	}
 
 	@Override
@@ -317,9 +317,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	private Set<Move> validMoves(Colour colour) {
 
 		ScotlandYardPlayer player = colourMap.get(colour);
-		System.out.println("colour = " + colour);
 		Node<Integer> playerNode  = graph.getNode(player.location());
-		System.out.println("player.location() = " + player.location());
 		Set<Move> moves = new HashSet<>();
 		Move moveToAdd;
 
@@ -413,7 +411,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			throw new IllegalStateException("Can't start new round when the game is already over");
 		}
 
-		System.out.println("Start rotate");
+		System.out.println("---Start rotate");
 		System.out.println("Round " + round);
 		System.out.println("Current player " + currentPlayer);
 
@@ -426,8 +424,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		System.out.println("On rotation complete");
 
-		for (Spectator spectator: spectators)
-			spectator.onRotationComplete(this);
+		if(!isGameOver())
+			for (Spectator spectator: spectators)
+				spectator.onRotationComplete(this);
 	}
 
 	@Override
