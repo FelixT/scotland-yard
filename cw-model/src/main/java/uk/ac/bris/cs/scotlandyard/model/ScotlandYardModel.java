@@ -492,11 +492,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			}
 			// check if any detective has any moves remaining
             Move pass = new PassMove(player.colour());
-            if(player.colour() != BLACK && !validMoves(player.colour()).contains(pass))
+            if(player.colour() != BLACK && !(validMoves(player.colour()).iterator().next() instanceof PassMove))
                 nomoves = false;
 		}
 		// check if max rounds exceeded
-		boolean roundsexceeded = (round >= rounds.size());
+		boolean roundsexceeded = (round >= rounds.size() && currentPlayer == BLACK);
 
 		if(playerinmrxposition || mrxstuck) {
 			// all detectives win
