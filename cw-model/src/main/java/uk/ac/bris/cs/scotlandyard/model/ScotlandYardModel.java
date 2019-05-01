@@ -243,8 +243,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			spectator.onRoundStarted(this, round);
 		System.out.println("On round started");
 
-
-
 		for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, firstmove);
 		System.out.println("on first move made");
@@ -264,11 +262,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		round++;
 		System.out.println("--Increased round" + round);
 
-
 		for (Spectator spectator : spectators)
 			spectator.onRoundStarted(this, round);
 		System.out.println("On round started");
-
 
 		for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, secondmove);
@@ -397,12 +393,12 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			moves.add(moveToAdd);
 		}
 
-		//System.out.println(moves);
 		return moves;
 
 	}
 
 	private void nextPlayer() {
+
 		// get current player index
 		int playerIndex = getPlayers().indexOf(currentPlayer);
 		int nextPlayer = (playerIndex + 1) % colourMap.size();
@@ -428,6 +424,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		System.out.println("Make move");
 		ScotlandYardPlayer player = colourMap.get(currentPlayer);
 		player.player().makeMove(this, player.location(), moves, this);
+
 	}
 
 	@Override
@@ -449,15 +446,21 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public Set<Colour> getWinningPlayers() {
+
         isGameOver();
 		return unmodifiableSet(winners);
+
 	}
 
 	@Override
 	public Optional<Integer> getPlayerLocation(Colour colour) {
+
 		if(colourMap.containsKey(colour)) { // if exists
+
 			ScotlandYardPlayer player = colourMap.get(colour);
+
 			if (colour == BLACK) {
+
 				if (round != 0 && rounds.get(round - 1)) { // if its a reveal round give location
 					lastMrX = player.location();
 					return Optional.of(player.location());
@@ -465,7 +468,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 					return Optional.of(lastMrX);
 
 			}
+
 			return Optional.of(player.location());
+
 		} else
 			return Optional.empty();
 
