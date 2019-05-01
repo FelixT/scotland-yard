@@ -20,7 +20,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	private List<Boolean> rounds;
 	private Graph<Integer, Transport> graph;
-	private List<ScotlandYardPlayer> players = new ArrayList<>();
 	private List<Spectator> spectators = new ArrayList<>();
 	private int round = 0;
 	private Colour currentPlayer = BLACK;
@@ -62,6 +61,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		Set<Integer> locationset = new HashSet<>();
 		Set<Colour> colourset = new HashSet<>();
+
+		List<ScotlandYardPlayer> players = new ArrayList<>();
 
 		for (PlayerConfiguration configuration : configurations) {
 
@@ -381,9 +382,12 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		int nextPlayer = (playerIndex + 1) % colourMap.size();
 
-		// get colour of next player
-		currentPlayer = players.get(nextPlayer).colour();
-
+		// get colour of next player by index
+		for (ScotlandYardPlayer player : colourMap.values()) {
+			if (nextPlayer == 0)
+				currentPlayer = player.colour();
+			nextPlayer--;
+		}
 	}
 
 	@Override
