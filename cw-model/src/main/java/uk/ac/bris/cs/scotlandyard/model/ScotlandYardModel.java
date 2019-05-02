@@ -494,6 +494,12 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Gives the number of tickets of a type a player has.
+	 * @param colour The colour of the player whose tickets are requested; not null
+	 * @param ticket The type of tickets that is being requested; not null
+	 * @return number of tickets, or empty if player doesn't exist.
+	 */
 	@Override
 	public Optional<Integer> getPlayerTickets(Colour colour, Ticket ticket) {
 
