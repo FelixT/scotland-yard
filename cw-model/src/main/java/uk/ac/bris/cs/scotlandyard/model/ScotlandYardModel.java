@@ -495,9 +495,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	}
 
 	/**
-	 * Gives the number of tickets of a type a player has.
+	 * Gives the number of tickets of a specified type a player has.
+	 *
 	 * @param colour The colour of the player whose tickets are requested; not null
 	 * @param ticket The type of tickets that is being requested; not null
+	 *
 	 * @return number of tickets, or empty if player doesn't exist.
 	 */
 	@Override
@@ -512,6 +514,12 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Determines whether or not the game is over.
+	 * If over, adds the winner(s) to 'winners'.
+	 *
+	 * @return true if game over, or false otherwise.
+	 */
 	@Override
 	public boolean isGameOver() {
 
