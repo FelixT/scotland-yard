@@ -13,6 +13,7 @@ Scotland Yard Project Report
 
 - implemented the spec? lol
 - First we perform checks on the game info we have been given
+We add each player object to a LinkedHashMap
 - The valid moves function...
 - A basic AI for Mr X which, for each turn it has, picks the move it can make which places it as far as possible from its last known position, based on the assumption this is where detectives will attempt to head to. It does this by...
 
@@ -30,6 +31,7 @@ Scotland Yard Project Report
 
 ## (brief) reflection
 
-- instanceof = bad
-- ai sucks
-- should split the model into different files ideally
+- However, there are some things which retrospectively could have been done better.
+The code uses 'instanceof' is used in the function 'isGameOver', whereas ... would have provided a more object-oriented solution.
+- Additionally, the AI given is 
+Additionally, most of the project ended up in the class ScotlandYardModel, causing to contain many functions and be long as a result. To improve this the class could be split over multiple classes.
