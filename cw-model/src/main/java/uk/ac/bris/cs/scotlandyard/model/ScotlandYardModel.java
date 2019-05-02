@@ -327,6 +327,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Check if a detective is on a particular space.
+	 * @param space the node number / location of a space to check for detectives on.
+	 * @return true if space occupied by detective, false otherwise.
+	 */
 	private boolean noDetectiveOnSpace(int space) {
 
 		for (ScotlandYardPlayer player : colourMap.values()) {
