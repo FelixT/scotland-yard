@@ -14,14 +14,14 @@ import uk.ac.bris.cs.gamekit.graph.Node;
 
 public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, MoveVisitor {
 
-	private List<Boolean> rounds;
-	private Graph<Integer, Transport> graph;
-	private List<Spectator> spectators = new ArrayList<>();
 	private int round = 0;
-	private Colour currentPlayer = BLACK;
 	private int lastMrX = 0;
-	private Map<Colour, ScotlandYardPlayer> colourMap = new LinkedHashMap<>(); // Used to guarantee order.
+	private List<Boolean> rounds;
+	private Colour currentPlayer = BLACK;
+	private Graph<Integer, Transport> graph;
 	private Set<Colour> winners = new HashSet<>();
+	private List<Spectator> spectators = new ArrayList<>();
+	private Map<Colour, ScotlandYardPlayer> colourMap = new LinkedHashMap<>(); // Used to guarantee order.
 
 	public ScotlandYardModel(List<Boolean> rounds, Graph<Integer, Transport> graph,
 			PlayerConfiguration mrX, PlayerConfiguration firstDetective,
@@ -55,7 +55,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		allTicketSet.add(Ticket.SECRET);
 
 		Set<Integer> locationSet = new HashSet<>();
-		Set<Colour> colourSet = new HashSet<>();
+		Set<Colour> colourSet    = new HashSet<>();
 
 		List<ScotlandYardPlayer> players = new ArrayList<>();
 
@@ -168,7 +168,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		if (rounds.size() > round && currentPlayer == BLACK) {
 
             if (rounds.get(round))
-                lastMrX = specMove.destination();
+                lastMrX  = specMove.destination();
             else
                 specMove = new TicketMove(move.colour(), move.ticket(), lastMrX);
 
@@ -210,7 +210,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		ScotlandYardPlayer mrx = colourMap.get(BLACK);
 
-		TicketMove firstMove = move.firstMove();
+		TicketMove firstMove  = move.firstMove();
 		TicketMove secondMove = move.secondMove();
 
 		boolean revealOne = (rounds.size() > round) && rounds.get(round);
@@ -218,11 +218,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		// If one of the moves occurs during a hidden round we change its destination to the last revealed location.
         if (!revealOne && revealTwo)
-            firstMove = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), lastMrX);
+            firstMove  = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), lastMrX);
         if (revealOne && !revealTwo)
             secondMove = new TicketMove(move.secondMove().colour(), move.secondMove().ticket(), firstMove.destination());
         if (!revealOne && !revealTwo) {
-            firstMove = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), lastMrX);
+            firstMove  = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), lastMrX);
             secondMove = new TicketMove(move.secondMove().colour(), move.secondMove().ticket(), lastMrX);
         }
 
