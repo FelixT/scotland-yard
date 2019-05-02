@@ -106,8 +106,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
             for (Spectator spectator : spectators)
                 spectator.onRotationComplete(this);
 
-            System.out.println("On rotation complete");
-
         } else {
 
         	// Continue the rotation by prompting the next player to move.
@@ -129,13 +127,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	@Override
     public void visit(PassMove move) {
 
-        System.out.println("Pass move");
-
         if (currentPlayer == BLACK) {
 
             round++;
-            System.out.println("--Increased round " + round);
-
 	        notifySpectatorsRoundStarted();
 
         }
@@ -143,24 +137,17 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
         nextPlayer();
         notifySpectatorsMoveMade(move);
 
-		System.out.println("On move made");
-
-        System.out.println("--Next player " + currentPlayer);
-
     }
 
 	private void notifySpectatorsRoundStarted() {
 
 		for (Spectator spectator : spectators)
 			spectator.onRoundStarted(this, round);
-		System.out.println("On round started");
 
 	}
 
 	@Override
 	public void visit(TicketMove move) {
-
-		System.out.println("Ticket move, " + move.ticket());
 
 		TicketMove specMove = move;
 
@@ -191,22 +178,20 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
         if (wasMrX) {
 
             round++;
-            System.out.println("Increased round " + round);
-
 	        notifySpectatorsRoundStarted();
+
         }
 
 		notifySpectatorsMoveMade(specMove);
-		System.out.println("On move made");
-
-        System.out.println("--Next player" + currentPlayer);
 
 	}
 
+	/**
+	 * Deals with double move
+	 * @param move the double move to be processed.
+	 */
 	@Override
 	public void visit(DoubleMove move) {
-
-		System.out.println("double move");
 
 		ScotlandYardPlayer mrX = colourMap.get(BLACK);
 
@@ -229,13 +214,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
         DoubleMove specMove = new DoubleMove(currentPlayer, firstMove, secondMove);
 
 		nextPlayer();
-		System.out.println("--Next player " + currentPlayer);
 
 		// Decrease number of double tickets in mrX's possession.
 		updateTickets(BLACK, DOUBLE, -1);
 
 		notifySpectatorsMoveMade(specMove);
-        System.out.println("on overall move made");
 
 		// -- FIRST MOVE --
 
@@ -245,7 +228,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		mrX.location(move.firstMove().destination());
 
 		round++;
-		System.out.println("--Increased round " + round);
 
 		// If either round is hidden we display the location as Mr X's last known location instead.
 		if (revealOne)
@@ -254,7 +236,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		notifySpectatorsRoundStarted();
 
 		notifySpectatorsMoveMade(firstMove);
-		System.out.println("on first move made");
 
 		// --SECOND MOVE--
 
@@ -269,12 +250,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		// Next rounds starts after first move made.
 		round++;
-		System.out.println("--Increased round" + round);
 
 		notifySpectatorsRoundStarted();
 
 		notifySpectatorsMoveMade(secondMove);
-		System.out.println("on second move made");
 
 	}
 
@@ -295,8 +274,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	 */
 	@Override
 	public void accept(Move move) {
-
-		System.out.println("Consumer.accept");
 
 		if (move == null)
 			throw new NullPointerException("Move can't be null");
@@ -452,10 +429,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		if (isGameOver())
 			throw new IllegalStateException("Can't start new round when the game is already over");
 
-		System.out.println("---Start rotate");
-		System.out.println("Round " + round);
-		System.out.println("Current player " + currentPlayer);
-
         Set<Move> moves = validMoves(currentPlayer);
 		giveMovesToCurrentPlayer(moves);
 
@@ -467,7 +440,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	 */
 	private void giveMovesToCurrentPlayer(Set<Move> moves) {
 
-		System.out.println("Make move");
 		ScotlandYardPlayer player = colourMap.get(currentPlayer);
 		player.player().makeMove(this, player.location(), moves, this);
 
