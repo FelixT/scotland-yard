@@ -423,9 +423,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	}
 
 	private void givePlayerMoves(Set<Move> moves) {
+
 		System.out.println("Make move");
 		ScotlandYardPlayer player = colourMap.get(currentPlayer);
 		player.player().makeMove(this, player.location(), moves, this);
+
 	}
 
 	@Override
