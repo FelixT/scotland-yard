@@ -315,6 +315,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Unregisters a given spectator (unless null or never added).
+	 * @param spectator to unregister.
+	 */
 	@Override
 	public void unregisterSpectator(Spectator spectator) {
 
