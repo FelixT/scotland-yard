@@ -10,25 +10,22 @@ import uk.ac.bris.cs.scotlandyard.ai.PlayerFactory;
 import uk.ac.bris.cs.scotlandyard.model.*;
 
 // TODO name the AI
-@ManagedAI("AI")
-public class MyAI implements PlayerFactory {
+@ManagedAI("MrXAI")
+public class MrXAI implements PlayerFactory {
 
-	// TODO create a new player here
 	@Override
 	public Player createPlayer(Colour colour) {
 		return new MyPlayer();
 	}
 
-	// TODO A sample player that selects a random move
 	private static class MyPlayer implements Player, MoveVisitor {
 
 		private int location;
-		private final Random random = new Random();
-		int furthestDistance = 0;
-		Move furthestMove = new PassMove(Colour.BLACK);
+		private int furthestDistance;
+		private Move furthestMove;
 
 		public void visit(TicketMove move) {
-			// get the distance away the move would be
+			// get the distance of the potential move and mrX's last known location
 			int distance = Math.abs(location - move.destination());
 
 			if(distance > furthestDistance) {
@@ -38,7 +35,7 @@ public class MyAI implements PlayerFactory {
 		}
 
 		public void visit(DoubleMove move) {
-			// get the distance away the move would be
+			// get the distance of the potential move and mrX's last known location
 			int distance = Math.abs(location - move.finalDestination());
 
 			if(distance > furthestDistance) {
@@ -50,14 +47,16 @@ public class MyAI implements PlayerFactory {
 		@Override
 		public void makeMove(ScotlandYardView view, int location, Set<Move> moves,
 				Consumer<Move> callback) {
-			// reset furthest distance
+			// reset values
 			furthestDistance = 0;
 			furthestMove = new PassMove(Colour.BLACK);
-            this.location = location;
+			if(view.getPlayerLocation(Colour.BLACK).isPresent()) // this should always be the case
+                this.location = view.getPlayerLocation(Colour.BLACK).get(); // get position known to detectives
 
             for(Move move : moves)
             	move.visit(this);
 
+            // mr X chooses the position furthest from mr x's last position known to detectives
 			callback.accept(furthestMove);
 
 		}
