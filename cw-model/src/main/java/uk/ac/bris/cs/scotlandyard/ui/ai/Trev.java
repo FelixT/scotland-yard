@@ -21,14 +21,20 @@ public class Trev implements PlayerFactory {
 		private int furthestDistance;
 		private Move furthestMove;
 
+		/**
+		 * @param move is a PassMove, which will only be the furthestMove if there are no other moves
+		 */
 		public void visit(PassMove move) {
 			if (furthestDistance == 0)
 				furthestMove = move;
 		}
 
+		/**
+		 * Checks the distance between the last known location of MrX and the destination of the move
+		 * @param move is a TicketMove
+		 */
 		public void visit(TicketMove move) {
 
-			// Get the distance of the potential move and Mr X's last known location.
 			int distance = Math.abs(location - move.destination());
 
 			if(distance >= furthestDistance) {
@@ -40,9 +46,12 @@ public class Trev implements PlayerFactory {
 
 		}
 
+		/**
+		 * Checks the distance between the last known location of MrX and the final destination of the move
+		 * @param move is a DoubleMove
+		 */
 		public void visit(DoubleMove move) {
 
-			// Get the distance of the potential move and Mr X's last known location.
 			int distance = Math.abs(location - move.finalDestination());
 
 			if(distance >= furthestDistance) {
@@ -58,7 +67,7 @@ public class Trev implements PlayerFactory {
 		public void makeMove(ScotlandYardView view, int location, Set<Move> moves,
 				Consumer<Move> callback) {
 
-			// Reset values.
+			// Reset values every move
 			furthestDistance = 0;
 			if(view.getPlayerLocation(Colour.BLACK).isPresent()) // This should always be the case.
                 this.location = view.getPlayerLocation(Colour.BLACK).get(); // Get position known to detectives.
