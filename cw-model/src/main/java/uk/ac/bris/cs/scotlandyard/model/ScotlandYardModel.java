@@ -20,7 +20,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	private int round = 0;
 	private Colour currentPlayer = BLACK;
 	private int lastMrX = 0;
-	private Map<Colour, ScotlandYardPlayer> colourMap = new LinkedHashMap<>(); // used to guarantee order
+	private Map<Colour, ScotlandYardPlayer> colourMap = new LinkedHashMap<>(); // Used to guarantee order.
 	private Set<Colour> winners = new HashSet<>();
 
 	public ScotlandYardModel(List<Boolean> rounds, Graph<Integer, Transport> graph,
@@ -231,7 +231,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		nextPlayer();
 		System.out.println("--Next player " + currentPlayer);
 
-		// Decrease number of double tickets in mrX's posession.
+		// Decrease number of double tickets in mrX's possession.
 		updateTickets(BLACK, DOUBLE, -1);
 
 		for (Spectator spectator : spectators)
@@ -405,11 +405,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	private void nextPlayer() {
 
-		// get current player index
+		// Get current player index.
 		int playerIndex = getPlayers().indexOf(currentPlayer);
 		int nextPlayer = (playerIndex + 1) % colourMap.size();
 
-		// get colour of next player
+		// Get colour of next player.
 		currentPlayer = getPlayers().get(nextPlayer);
 
 	}
