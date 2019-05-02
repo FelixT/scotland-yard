@@ -91,9 +91,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		}
 
-		for (ScotlandYardPlayer player : players) {
+		for (ScotlandYardPlayer player : players)
 			colourMap.put(player.colour(), player);
-		}
 
 	}
 
