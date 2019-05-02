@@ -26,37 +26,46 @@ public class MrXAI implements PlayerFactory {
 		private Move furthestMove;
 
 		public void visit(TicketMove move) {
-			// get the distance of the potential move and mrX's last known location
+
+			// Get the distance of the potential move and Mr X's last known location.
 			int distance = Math.abs(location - move.destination());
 
 			if(distance >= furthestDistance) {
+
 				furthestDistance = distance;
-				furthestMove = move;
+				furthestMove     = move;
+
 			}
+
 		}
 
 		public void visit(DoubleMove move) {
-			// get the distance of the potential move and mrX's last known location
+
+			// Get the distance of the potential move and Mr X's last known location.
 			int distance = Math.abs(location - move.finalDestination());
 
 			if(distance >= furthestDistance) {
+
 				furthestDistance = distance;
-				furthestMove = move;
+				furthestMove     = move;
+
 			}
+
 		}
 
 		@Override
 		public void makeMove(ScotlandYardView view, int location, Set<Move> moves,
 				Consumer<Move> callback) {
-			// reset values
+
+			// Reset values.
 			furthestDistance = 0;
-			if(view.getPlayerLocation(Colour.BLACK).isPresent()) // this should always be the case
-                this.location = view.getPlayerLocation(Colour.BLACK).get(); // get position known to detectives
+			if(view.getPlayerLocation(Colour.BLACK).isPresent()) // This should always be the case.
+                this.location = view.getPlayerLocation(Colour.BLACK).get(); // Get position known to detectives.
 
             for(Move move : moves)
             	move.visit(this);
 
-            // mr X chooses the position furthest from mr x's last position known to detectives
+            // Mr X chooses the position furthest from Mr X's last position known to detectives.
 			callback.accept(furthestMove);
 
 		}
