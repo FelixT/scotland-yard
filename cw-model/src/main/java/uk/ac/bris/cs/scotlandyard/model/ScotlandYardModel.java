@@ -124,6 +124,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Deals with pass move. Calls nextPlayer, notifies spectators,
+	 * increments round if was Mr X.
+	 * @param move the pass move to be processed.
+	 */
 	@Override
     public void visit(PassMove move) {
 
@@ -139,17 +144,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
     }
 
-	private void notifySpectatorsRoundStarted() {
-
-		for (Spectator spectator : spectators)
-			spectator.onRoundStarted(this, round);
-
-	}
-
 	/**
 	 * Deals with ticket move and whether to reveal location.
 	 * Updates tickets and calls nextPlayer, updates location,
-	 * notifies spectators etc.
+	 * notifies spectators, increments round if was Mr X.
 	 * @param move the ticket move to be processed.
 	 */
 	@Override
@@ -195,7 +193,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	/**
 	 * Deals with double move and what to reveal location-wise if anything.
 	 * Updates tickets and calls nextPlayer, updates location, notifies
-	 * spectators etc.
+	 * spectators, increments round if was Mr X.
 	 * @param move the double move to be processed.
 	 */
 	@Override
