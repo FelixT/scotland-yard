@@ -25,7 +25,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	private int round = 0;
 	private Colour currentPlayer = BLACK;
 	private int lastMrX = 0;
-	private boolean wasmrx = false;
+	private boolean wasMrX = false;
 	private Map<Colour, ScotlandYardPlayer> colourMap = new LinkedHashMap<>(); // used to guarantee order
 	private Set<Colour> winners = new HashSet<>();
 
@@ -171,7 +171,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		nextPlayer();
 
-        if (wasmrx) { // quite possibly redundant
+        if (wasMrX) { // quite possibly redundant
             round++;
             System.out.println("Increased round " + round);
 
@@ -275,7 +275,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	public void accept(Move move) {
 		System.out.println("Consumer.accept");
 
-		wasmrx = (currentPlayer == BLACK);
+		wasMrX = (currentPlayer == BLACK);
 
 		if (move == null)
 			throw new NullPointerException("Move can't be null");
@@ -329,11 +329,12 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		ScotlandYardPlayer player = colourMap.get(colour);
 		Node<Integer> playerNode  = graph.getNode(player.location());
+
 		Set<Move> moves = new HashSet<>();
 
 		for (Edge<Integer, Transport> edge : graph.getEdgesFrom(playerNode)) {
 
-			Ticket ticket = Ticket.fromTransport(edge.data());
+			Ticket ticket   = Ticket.fromTransport(edge.data());
 			int destination = edge.destination().value();
 		
 			if ((player.hasTickets(ticket) || player.hasTickets(SECRET)) && noDetectiveOnSpace(destination)) {
@@ -355,7 +356,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 						if (noDetectiveOnSpace(destination2)) {
 
 							TicketMove move2 = new TicketMove(colour, ticket2, destination2);
-							boolean ticketsSame = ticket == ticket2;
+							boolean ticketsSame = (ticket == ticket2);
 
 							if ((ticketsSame && player.hasTickets(ticket, 2)) ||
 									(!ticketsSame && player.hasTickets(ticket) && player.hasTickets(ticket2)))
