@@ -301,12 +301,14 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public void unregisterSpectator(Spectator spectator) {
-		if(spectator == null)
+
+		if (spectator == null)
 			throw new NullPointerException("Spectator can't be null");
-		else if(!spectators.contains(spectator))
+		else if (!spectators.contains(spectator))
 			throw new IllegalArgumentException("Spectator has never been added");
 		else
 			spectators.remove(spectator);
+
 	}
 
 	private boolean noDetectiveOnSpace(int space) {
