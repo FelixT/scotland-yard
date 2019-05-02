@@ -101,19 +101,27 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	}
 
     private void logicAfterMove() {
+
         if(isGameOver()) {
+
             for (Spectator spectator : spectators)
                 spectator.onGameOver(this, getWinningPlayers());
+
         } else if (currentPlayer == BLACK) {
+
             for (Spectator spectator : spectators)
                 spectator.onRotationComplete(this);
+
             System.out.println("On rotation complete");
+
         } else {
-        	// continue the rotation by prompting the next player to move
+
+        	// Continue the rotation by prompting the next player to move.
             Set<Move> moves = validMoves(currentPlayer);
 	        giveMovesToCurrentPlayer(moves);
 	        
         }
+
     }
 
     private void updateTickets(Colour playerColour, Ticket ticket, int change) {
@@ -145,7 +153,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		System.out.println("On move made");
 
         System.out.println("--Next player " + currentPlayer);
-
 
     }
 
