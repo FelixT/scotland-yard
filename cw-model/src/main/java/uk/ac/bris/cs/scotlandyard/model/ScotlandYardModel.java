@@ -525,7 +525,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 				playerInMrXPosition = true;
 
 			// Check if any detective has any moves remaining.
-			Move pass = new PassMove(player.colour());
 			boolean playerHasNoPassMove = !(validMoves(player.colour()).iterator().next() instanceof PassMove);
 
 			if (player != mrX && playerHasNoPassMove)
