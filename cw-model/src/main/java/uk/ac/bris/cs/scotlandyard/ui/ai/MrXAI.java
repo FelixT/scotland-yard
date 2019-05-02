@@ -10,6 +10,7 @@ import uk.ac.bris.cs.scotlandyard.ai.PlayerFactory;
 import uk.ac.bris.cs.scotlandyard.model.*;
 
 // TODO name the AI
+// how about Wob Jehona Marijana Abu al-Fadl Chaudhari I
 @ManagedAI("MrXAI")
 public class MrXAI implements PlayerFactory {
 
