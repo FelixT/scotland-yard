@@ -338,6 +338,12 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Generates the set of valid moves for a player. If no moves are
+	 * possible, a single PassMove is added to the set.
+	 * @param colour of player for which valid moves should be generated.
+	 * @return Set of valid moves the player can make.
+	 */
 	private Set<Move> validMoves(Colour colour) {
 
 		ScotlandYardPlayer player = colourMap.get(colour);
@@ -481,9 +487,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	/**
 	 * Gives the location of detective requested. If Mr X requested,
 	 * location given in reveal round, or lastMrX if not.
-	 *
 	 * @param colour The colour of the player whose location is requested.
-	 *
 	 * @return location of player, or empty if player does not exist.
 	 */
 	@Override
@@ -520,10 +524,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	/**
 	 * Gives the number of tickets of a specified type a player has.
-	 *
-	 * @param colour The colour of the player whose tickets are requested; not null
-	 * @param ticket The type of tickets that is being requested; not null
-	 *
+	 * @param colour The colour of the player whose tickets are requested.
+	 * @param ticket The type of tickets that is being requested.
 	 * @return number of tickets, or empty if player doesn't exist.
 	 */
 	@Override
@@ -541,7 +543,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	/**
 	 * Determines whether or not the game is over.
 	 * If over, adds the winner(s) to 'winners'.
-	 *
 	 * @return true if game over, or false otherwise.
 	 */
 	@Override
