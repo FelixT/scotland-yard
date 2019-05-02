@@ -187,7 +187,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	}
 
 	/**
-	 * Deals with double move
+	 * Deals with double move and what to reveal location-wise if anything.
+	 * Updates tickets and calls nextPlayer, updates location, notifies
+	 * spectators etc.
 	 * @param move the double move to be processed.
 	 */
 	@Override
