@@ -94,6 +94,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Check if game is over, if so notify.
+	 * If not, if the rotation is complete, notify.
+	 * Otherwise continue rotation.
+	 */
     private void logicAfterMove() {
 
         if (isGameOver()) {
@@ -116,7 +121,13 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
     }
 
-    private void updateTickets(Colour playerColour, Ticket ticket, int change) {
+	/**
+	 * Updates the number of tickets of a type the player should have by a specified number.
+	 * @param playerColour the colour of the player for whom the tickets are to be updated.
+	 * @param ticket the ticket type to be changed.
+	 * @param change the number by which the tickets should be changed (positive = increase).
+	 */
+	private void updateTickets(Colour playerColour, Ticket ticket, int change) {
 
 	    ScotlandYardPlayer player = colourMap.get(playerColour);
         int ticketsAfter = player.tickets().get(ticket) + change;
