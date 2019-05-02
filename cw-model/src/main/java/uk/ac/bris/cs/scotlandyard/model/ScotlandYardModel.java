@@ -146,6 +146,12 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Deals with ticket move and whether to reveal location.
+	 * Updates tickets and calls nextPlayer, updates location,
+	 * notifies spectators etc.
+	 * @param move the ticket move to be processed.
+	 */
 	@Override
 	public void visit(TicketMove move) {
 
