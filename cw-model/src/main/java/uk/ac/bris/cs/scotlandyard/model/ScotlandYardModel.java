@@ -361,7 +361,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	/**
 	 * Generates the set of valid moves for a player. If no moves are
 	 * possible, a single PassMove is added to the set.
-	 * @param colour of player for which valid moves should be generated.
+	 * @param colour of player for whom valid moves should be generated.
 	 * @return Set of valid moves the player can make.
 	 */
 	private Set<Move> validMoves(Colour colour) {
