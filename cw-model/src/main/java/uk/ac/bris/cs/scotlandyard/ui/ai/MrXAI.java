@@ -1,16 +1,13 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Set;
-import java.util.function.Consumer;
-
 import uk.ac.bris.cs.scotlandyard.ai.ManagedAI;
 import uk.ac.bris.cs.scotlandyard.ai.PlayerFactory;
 import uk.ac.bris.cs.scotlandyard.model.*;
 
+import java.util.Set;
+import java.util.function.Consumer;
+
 // TODO name the AI
-// how about Wob Jehona Marijana Abu al-Fadl Chaudhari I
 @ManagedAI("MrXAI")
 public class MrXAI implements PlayerFactory {
 
