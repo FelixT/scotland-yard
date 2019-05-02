@@ -282,9 +282,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		Set<Move> validMoves = validMoves(currentPlayer);
 
-		if (!validMoves.contains(move)) {
+		if (!validMoves.contains(move))
 			throw new IllegalArgumentException("Invalid move");
-		}
 
 		move.visit(this);
 
