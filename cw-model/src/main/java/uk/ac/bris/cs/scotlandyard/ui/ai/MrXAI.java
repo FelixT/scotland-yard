@@ -22,6 +22,11 @@ public class MrXAI implements PlayerFactory {
 		private int furthestDistance;
 		private Move furthestMove;
 
+		public void visit(PassMove move) {
+			if (furthestDistance == 0)
+				furthestMove = move;
+		}
+
 		public void visit(TicketMove move) {
 
 			// Get the distance of the potential move and Mr X's last known location.
