@@ -135,6 +135,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
         System.out.println("Pass move");
 
         if (currentPlayer == BLACK) {
+
             round++;
             System.out.println("--Increased round " + round);
 
@@ -143,9 +144,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
         }
 
         nextPlayer();
+        notifySpectatorsMoveMade(move);
 
-        for (Spectator spectator: spectators)
-			spectator.onMoveMade(this, move);
 		System.out.println("On move made");
 
         System.out.println("--Next player " + currentPlayer);
@@ -162,6 +162,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public void visit(TicketMove move) {
+
 		System.out.println("Ticket move, " + move.ticket());
 
 		TicketMove specMove = move;
@@ -281,10 +282,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
-	private void notifySpectatorsMoveMade(TicketMove secondMove) {
+	private void notifySpectatorsMoveMade(Move move) {
 
 		for (Spectator spectator : spectators)
-			spectator.onMoveMade(this, secondMove);
+			spectator.onMoveMade(this, move);
 
 	}
 
