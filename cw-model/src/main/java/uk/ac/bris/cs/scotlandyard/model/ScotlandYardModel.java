@@ -12,8 +12,6 @@ import uk.ac.bris.cs.gamekit.graph.Graph;
 import uk.ac.bris.cs.gamekit.graph.ImmutableGraph;
 import uk.ac.bris.cs.gamekit.graph.Node;
 
-
-// TODO implement all methods and pass all tests
 public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, MoveVisitor {
 
 	private List<Boolean> rounds;
@@ -77,7 +75,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 			if (configuration.colour != BLACK) {
 
-				// check detectives have the right tickets
+				// Check detectives have the right tickets.
 				if (configuration.tickets.get(DOUBLE) != 0)
 					throw new IllegalArgumentException("Detectives should not have double tickets");
 
