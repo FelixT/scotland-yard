@@ -47,30 +47,30 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		configurations.add(0, firstDetective);
 		configurations.add(0, mrX);
 
-		Set<Ticket> allticketset = new HashSet<>();
-		allticketset.add(Ticket.TAXI);
-		allticketset.add(Ticket.BUS);
-		allticketset.add(Ticket.UNDERGROUND);
-		allticketset.add(Ticket.DOUBLE);
-		allticketset.add(Ticket.SECRET);
+		Set<Ticket> allTicketSet = new HashSet<>();
+		allTicketSet.add(Ticket.TAXI);
+		allTicketSet.add(Ticket.BUS);
+		allTicketSet.add(Ticket.UNDERGROUND);
+		allTicketSet.add(Ticket.DOUBLE);
+		allTicketSet.add(Ticket.SECRET);
 
-		Set<Integer> locationset = new HashSet<>();
-		Set<Colour> colourset = new HashSet<>();
+		Set<Integer> locationSet = new HashSet<>();
+		Set<Colour> colourSet = new HashSet<>();
 
 		List<ScotlandYardPlayer> players = new ArrayList<>();
 
 		for (PlayerConfiguration configuration : configurations) {
 
-			if (locationset.contains(configuration.location))
+			if (locationSet.contains(configuration.location))
 				throw new IllegalArgumentException("Duplicate location");
 
-			if (colourset.contains(configuration.colour))
+			if (colourSet.contains(configuration.colour))
 				throw new IllegalArgumentException("Duplicate colour");
 
-			locationset.add(configuration.location);
-			colourset.add(configuration.colour);
+			locationSet.add(configuration.location);
+			colourSet.add(configuration.colour);
 
-			if (!configuration.tickets.keySet().containsAll(allticketset))
+			if (!configuration.tickets.keySet().containsAll(allTicketSet))
 				throw new IllegalArgumentException("Each player must have each ticket type even if their values are zero");
 
 			if (configuration.colour != BLACK) {
