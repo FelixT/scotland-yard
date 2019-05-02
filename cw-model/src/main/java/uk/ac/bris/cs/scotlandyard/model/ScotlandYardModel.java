@@ -96,7 +96,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
     private void logicAfterMove() {
 
-        if(isGameOver()) {
+        if (isGameOver()) {
 
             for (Spectator spectator : spectators)
                 spectator.onGameOver(this, getWinningPlayers());
@@ -125,7 +125,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
         player.tickets().replace(ticket, ticketsAfter);
 
 	}
-
 
 	@Override
     public void visit(PassMove move) {
@@ -166,7 +165,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		TicketMove specMove = move;
 
 		// If it's not a reveal round we give mrX's last known location, otherwise set last known location.
-		if(rounds.size() > round && currentPlayer == BLACK) {
+		if (rounds.size() > round && currentPlayer == BLACK) {
 
             if (rounds.get(round))
                 lastMrX = specMove.destination();
@@ -182,7 +181,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		updateTickets(currentPlayer, move.ticket(), -1);
 
         // Detectives transfer their tickets to Mr X.
-		if(currentPlayer != BLACK)
+		if (currentPlayer != BLACK)
             updateTickets(BLACK, move.ticket(), 1);
 
 		boolean wasMrX = (currentPlayer == BLACK);
@@ -309,7 +308,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	@Override
 	public void registerSpectator(Spectator spectator) {
 
-		if(spectators.contains(spectator))
+		if (spectators.contains(spectator))
 			throw new IllegalArgumentException("Spectator already exists");
 		else
 			spectators.add(Objects.requireNonNull(spectator));
@@ -418,7 +417,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	@Override
 	public void startRotate() {
 
-		if(isGameOver())
+		if (isGameOver())
 			throw new IllegalStateException("Can't start new round when the game is already over");
 
 		System.out.println("---Start rotate");
@@ -466,7 +465,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	@Override
 	public Optional<Integer> getPlayerLocation(Colour colour) {
 
-		if(colourMap.containsKey(colour)) { // If the requested player exists..
+		if (colourMap.containsKey(colour)) { // If the requested player exists..
 
 			ScotlandYardPlayer player = colourMap.get(colour);
 			final Optional<Integer> location = Optional.of(player.location());
@@ -535,7 +534,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		// Check if max rounds exceeded.
 		boolean roundsExceeded = (round >= rounds.size() && currentPlayer == BLACK);
 
-		if(playerInMrXPosition || mrXStuck) {
+		if (playerInMrXPosition || mrXStuck) {
 
 			// Add all detectives to winning players.
 			for (ScotlandYardPlayer player : colourMap.values()) {
@@ -543,7 +542,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 					winners.add(player.colour());
 			}
 
-		} else if(roundsExceeded || noMoves) {
+		} else if (roundsExceeded || noMoves) {
 
             winners.add(BLACK);
 
