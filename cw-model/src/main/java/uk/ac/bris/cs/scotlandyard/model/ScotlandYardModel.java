@@ -57,8 +57,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		Set<Integer> locationSet = new HashSet<>();
 		Set<Colour> colourSet    = new HashSet<>();
 
-		List<ScotlandYardPlayer> players = new ArrayList<>();
-
 		for (PlayerConfiguration configuration : configurations) {
 
 			if (locationSet.contains(configuration.location))
@@ -85,12 +83,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			}
 
 			ScotlandYardPlayer player = new ScotlandYardPlayer(configuration.player, configuration.colour, configuration.location, configuration.tickets);
-			players.add(Objects.requireNonNull(player));
+			Objects.requireNonNull(player);
+			colourMap.put(player.colour(), player);
 
 		}
-
-		for (ScotlandYardPlayer player : players)
-			colourMap.put(player.colour(), player);
 
 	}
 
