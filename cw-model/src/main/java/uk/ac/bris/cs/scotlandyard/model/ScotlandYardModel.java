@@ -168,10 +168,12 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		// If it's not a reveal round we give mrX's last known location, otherwise set last known location.
 		if(rounds.size() > round && currentPlayer == BLACK) {
+
             if (rounds.get(round))
                 lastMrX = specMove.destination();
             else
                 specMove = new TicketMove(move.colour(), move.ticket(), lastMrX);
+
         }
 
 		ScotlandYardPlayer player = colourMap.get(currentPlayer);
