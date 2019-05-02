@@ -498,36 +498,51 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public boolean isGameOver() {
+
 	    winners.clear();
-		boolean playerinmrxposition = false;
-		ScotlandYardPlayer mrx = colourMap.get(BLACK);
-		int mrxposition = mrx.location();
-		boolean nomoves = true;
-		boolean mrxstuck = (validMoves(BLACK).iterator().next() instanceof PassMove) && currentPlayer == BLACK;
+
+		boolean playerInMrXPosition = false;
+		ScotlandYardPlayer mrX = colourMap.get(BLACK);
+		int mrXPosition = mrX.location();
+		boolean noMoves = true;
+		boolean mrXStuck = (validMoves(BLACK).iterator().next() instanceof PassMove) && currentPlayer == BLACK;
 
 		for (ScotlandYardPlayer player : colourMap.values()) {
-			// check if detective in same position as mr x
-			if (player.colour() != BLACK && player.location() == mrxposition) {
-				playerinmrxposition = true;
-			}
-			// check if any detective has any moves remaining
-            Move pass = new PassMove(player.colour());
-            if(player.colour() != BLACK && !(validMoves(player.colour()).iterator().next() instanceof PassMove))
-                nomoves = false;
-		}
-		// check if max rounds exceeded
-		boolean roundsexceeded = (round >= rounds.size() && currentPlayer == BLACK);
 
-		if(playerinmrxposition || mrxstuck) {
-			// all detectives win
-			for (ScotlandYardPlayer player : colourMap.values())
+			// Check if detective in same position as Mr X.
+			if (player.colour() != BLACK && player.location() == mrXPosition)
+				playerInMrXPosition = true;
+
+			// Check if any detective has any moves remaining.
+			Move pass = new PassMove(player.colour());
+			boolean playerHasNoPassMove = !(validMoves(player.colour()).iterator().next() instanceof PassMove);
+
+			if (player != mrX && playerHasNoPassMove)
+				noMoves = false;
+
+		}
+
+		// Check if max rounds exceeded.
+		boolean roundsExceeded = (round >= rounds.size() && currentPlayer == BLACK);
+
+		if(playerInMrXPosition || mrXStuck) {
+
+			// Add all detectives to winning players.
+			for (ScotlandYardPlayer player : colourMap.values()) {
 				if (player.colour() != BLACK)
 					winners.add(player.colour());
-		} else if(roundsexceeded || nomoves) {
-            winners.add(BLACK);
-        }
+			}
 
-		return (nomoves || roundsexceeded || playerinmrxposition || mrxstuck);
+		} else if(roundsExceeded || noMoves) {
+
+            winners.add(BLACK);
+
+		}
+
+		// Return true if any of the game over conditions are satisfied.
+		// Winners are stored outside the function so are still accessible after return.
+		return (noMoves || roundsExceeded || playerInMrXPosition || mrXStuck);
+
 	}
 
 	@Override
