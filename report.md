@@ -11,4 +11,20 @@ Scotland Yard Project Report
 
 ## Summary on what has been done
 
-- 
+- implemented the spec? lol
+- ai
+
+## Achievemens
+
+- OO concepts?
+- visitor model
+- dynamic dispach
+- callbacks
+- DRY principle
+- polymorphism
+- abstraction
+
+## (brief) reflection
+
+- instanceof = bad
+- ai sucks
