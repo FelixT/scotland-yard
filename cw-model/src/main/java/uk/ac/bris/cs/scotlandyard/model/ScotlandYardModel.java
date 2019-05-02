@@ -322,7 +322,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		ScotlandYardPlayer player = colourMap.get(colour);
 		Node<Integer> playerNode  = graph.getNode(player.location());
 		Set<Move> moves = new HashSet<>();
-		Move moveToAdd;
 
 		for (Edge<Integer, Transport> edge : graph.getEdgesFrom(playerNode)) {
 
@@ -331,15 +330,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		
 			if ((player.hasTickets(ticket) || player.hasTickets(SECRET)) && noDetectiveOnSpace(destination)) {
 
-				if (player.hasTickets(ticket)) {
-					moveToAdd = new TicketMove(colour, ticket, destination);
-					moves.add(moveToAdd);
-				}
+				if (player.hasTickets(ticket))
+					moves.add(new TicketMove(colour, ticket, destination));
 
-				if (player.hasTickets(SECRET)) {
-					moveToAdd = new TicketMove(colour, SECRET, destination);
-					moves.add(moveToAdd);
-				}
+				if (player.hasTickets(SECRET))
+					moves.add(new TicketMove(colour, SECRET, destination));
 
 				if (player.hasTickets(DOUBLE) && round < rounds.size()-2) {
 
@@ -351,35 +346,27 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 						if (noDetectiveOnSpace(destination2)) {
 
-							if ((ticket == ticket2 && player.hasTickets(ticket, 2)) || (ticket !=
-									ticket2 && player.hasTickets(ticket) && player.hasTickets(ticket2))) {
+							TicketMove move2 = new TicketMove(colour, ticket2, destination2);
+							boolean ticketsSame = ticket == ticket2;
 
-								TicketMove move2 = new TicketMove(colour, ticket2, destination2);
-								moveToAdd = new DoubleMove(colour, move1, move2);
-								moves.add(moveToAdd);
-
-							}
+							if ((ticketsSame && player.hasTickets(ticket, 2)) ||
+									(!ticketsSame && player.hasTickets(ticket) && player.hasTickets(ticket2)))
+								moves.add(new DoubleMove(colour, move1, move2));
 
 							if (player.hasTickets(SECRET)) {
 
-								TicketMove move1sec = new TicketMove(colour, SECRET, destination);
-								TicketMove move2 = new TicketMove(colour, ticket2, destination2);
-								TicketMove move2sec = new TicketMove(colour, SECRET, destination2);
+								TicketMove move1Secret = new TicketMove(colour, SECRET, destination);
+								TicketMove move2Secret = new TicketMove(colour, SECRET, destination2);
 
-								if (ticket != SECRET && ticket2 != SECRET && player.hasTickets(ticket)) {
-									moveToAdd = new DoubleMove(colour, move1, move2sec);
-									moves.add(moveToAdd);
-								}
+								if (ticket != SECRET && ticket2 != SECRET && player.hasTickets(ticket))
+									moves.add(new DoubleMove(colour, move1, move2Secret));
 
-								if (ticket != SECRET && ticket2 != SECRET && player.hasTickets(ticket2)) {
-									moveToAdd = new DoubleMove(colour, move1sec, move2);
-									moves.add(moveToAdd);
-								}
+								if (ticket != SECRET && ticket2 != SECRET && player.hasTickets(ticket2))
+									moves.add(new DoubleMove(colour, move1Secret, move2));
 
-								if (player.hasTickets(SECRET, 2)) {
-									moveToAdd = new DoubleMove(colour, move1sec, move2sec);
-									moves.add(moveToAdd);
-								}
+								if (player.hasTickets(SECRET, 2))
+									moves.add(new DoubleMove(colour, move1Secret, move2Secret));
+
 							}
 						}
 					}
@@ -387,10 +374,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			}
 		}
 
-		if (moves.isEmpty()) {
-			moveToAdd = new PassMove(colour);
-			moves.add(moveToAdd);
-		}
+		if (moves.isEmpty())
+			moves.add(new PassMove(colour));
 
 		return moves;
 
