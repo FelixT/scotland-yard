@@ -25,7 +25,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	private int round = 0;
 	private Colour currentPlayer = BLACK;
 	private int lastMrX = 0;
-	private boolean wasMrX = false;
 	private Map<Colour, ScotlandYardPlayer> colourMap = new LinkedHashMap<>(); // used to guarantee order
 	private Set<Colour> winners = new HashSet<>();
 
@@ -280,8 +279,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	@Override
 	public void accept(Move move) {
 		System.out.println("Consumer.accept");
-
-		wasMrX = (currentPlayer == BLACK);
 
 		if (move == null)
 			throw new NullPointerException("Move can't be null");
