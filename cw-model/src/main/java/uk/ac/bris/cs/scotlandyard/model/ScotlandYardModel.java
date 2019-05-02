@@ -203,6 +203,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Deals with double move
+	 * @param move the double move to be processed.
+	 */
 	@Override
 	public void visit(DoubleMove move) {
 
