@@ -182,9 +182,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
             System.out.println("On round started");
         }
 
-        for (Spectator spectator : spectators)
-			spectator.onMoveMade(this, specmove);
-        System.out.println("On move made");
+		notifyMoveMade(specmove);
+		System.out.println("On move made");
 
         System.out.println("--Next player" + currentPlayer);
 
@@ -244,8 +243,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			spectator.onRoundStarted(this, round);
 		System.out.println("On round started");
 
-		for (Spectator spectator : spectators)
-			spectator.onMoveMade(this, firstmove);
+		notifyMoveMade(firstmove);
 		System.out.println("on first move made");
 
 		// --SECOND MOVE--
@@ -267,9 +265,15 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			spectator.onRoundStarted(this, round);
 		System.out.println("On round started");
 
+		notifyMoveMade(secondmove);
+		System.out.println("on second move made");
+
+	}
+
+	private void notifyMoveMade(TicketMove secondmove) {
+
 		for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, secondmove);
-		System.out.println("on second move made");
 
 	}
 
