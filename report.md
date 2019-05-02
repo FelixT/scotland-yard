@@ -18,14 +18,15 @@ Scotland Yard Project Report
 
 - OO concepts?
 - polymorphism used by moves: allows us to return e.g. a set containing 'Moves' while each of these might be PassMove, TicketMove or DoubleMove. Each of these inherits the Move class
-- 'consumer' used for accept
+- 'consumer' used for accept (callbacks)
 - visitor model
-- dynamic dispach
-- callbacks
+- dynamic dispach (but i don't think we used this?)
 - DRY principle
 - abstraction
+- model view controller?
 
 ## (brief) reflection
 
 - instanceof = bad
 - ai sucks
+- should split the model into different files ideally
