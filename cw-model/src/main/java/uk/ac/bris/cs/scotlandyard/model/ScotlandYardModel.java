@@ -462,10 +462,18 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Gives the location of detective requested. If Mr X requested,
+	 * location given in reveal round, or lastMrX if not.
+	 *
+	 * @param colour The colour of the player whose location is requested.
+	 *
+	 * @return location of player, or empty if player does not exist.
+	 */
 	@Override
 	public Optional<Integer> getPlayerLocation(Colour colour) {
 
-		if (colourMap.containsKey(colour)) { // If the requested player exists..
+		if (colourMap.containsKey(colour)) { // Check if the player exists / is in use.
 
 			ScotlandYardPlayer player = colourMap.get(colour);
 			final Optional<Integer> location = Optional.of(player.location());
