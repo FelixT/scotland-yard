@@ -264,6 +264,16 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	}
 
 	/**
+	 * Notify all spectators in spectator list that a round has started.
+	 */
+	private void notifySpectatorsRoundStarted() {
+
+		for (Spectator spectator : spectators)
+			spectator.onRoundStarted(this, round);
+
+	}
+
+	/**
 	 * Notifies all spectators in spectator list of a move made.
 	 * @param move to notify spectators of.
 	 */
