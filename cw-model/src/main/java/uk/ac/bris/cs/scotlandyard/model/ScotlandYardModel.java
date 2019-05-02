@@ -112,9 +112,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
         } else {
 
             Set<Move> moves = validMoves(currentPlayer);
-            System.out.println("Make move");
-            ScotlandYardPlayer player = colourMap.get(currentPlayer);
-            player.player().makeMove(this, player.location(), moves, this);
+	        givePlayerMoves(moves);
         }
     }
 
@@ -420,11 +418,14 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		System.out.println("Current player " + currentPlayer);
 
         Set<Move> moves = validMoves(currentPlayer);
+		givePlayerMoves(moves);
 
+	}
+
+	private void givePlayerMoves(Set<Move> moves) {
 		System.out.println("Make move");
 		ScotlandYardPlayer player = colourMap.get(currentPlayer);
 		player.player().makeMove(this, player.location(), moves, this);
-
 	}
 
 	@Override
