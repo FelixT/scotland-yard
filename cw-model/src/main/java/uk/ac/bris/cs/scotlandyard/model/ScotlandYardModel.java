@@ -294,10 +294,12 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public void registerSpectator(Spectator spectator) {
+
 		if(spectators.contains(spectator))
 			throw new IllegalArgumentException("Spectator already exists");
 		else
 			spectators.add(Objects.requireNonNull(spectator));
+
 	}
 
 	@Override
