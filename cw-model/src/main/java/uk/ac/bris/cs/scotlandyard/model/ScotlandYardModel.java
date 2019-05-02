@@ -25,7 +25,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	private int round = 0;
 	private Colour currentPlayer = BLACK;
 	private int lastMrX = 0;
-	private boolean wasmrx = false;
 	private Map<Colour, ScotlandYardPlayer> colourMap = new LinkedHashMap<>(); // used to guarantee order
 	private Set<Colour> winners = new HashSet<>();
 
@@ -110,7 +109,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
                 spectator.onRotationComplete(this);
             System.out.println("On rotation complete");
         } else {
-
+        	// continue the rotation by prompting the next player to move
             Set<Move> moves = validMoves(currentPlayer);
 	        giveMovesToCurrentPlayer(moves);
 	        
@@ -122,7 +121,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
     public void visit(PassMove move) {
         System.out.println("Pass move");
 
-        if (currentPlayer == BLACK) { // quite possibly redundant
+        if (currentPlayer == BLACK) {
             round++;
             System.out.println("--Increased round " + round);
 
@@ -169,9 +168,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			mrx.tickets().replace(move.ticket(), newtickets);
 		}
 
+		boolean wasmrx = (currentPlayer == BLACK);
 		nextPlayer();
 
-        if (wasmrx) { // quite possibly redundant
+		// if player was mrX then it's the end of the round, so we start the next
+        if (wasmrx) {
             round++;
             System.out.println("Increased round " + round);
 
@@ -274,8 +275,6 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	@Override
 	public void accept(Move move) {
 		System.out.println("Consumer.accept");
-
-		wasmrx = (currentPlayer == BLACK);
 
 		if (move == null)
 			throw new NullPointerException("Move can't be null");
