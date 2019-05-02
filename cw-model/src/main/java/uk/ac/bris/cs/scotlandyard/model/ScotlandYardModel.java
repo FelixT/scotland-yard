@@ -429,6 +429,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Passes the set of valid moves to the current player.
+	 * @param moves the set of valid moves the current player can make.
+	 */
 	private void giveMovesToCurrentPlayer(Set<Move> moves) {
 
 		System.out.println("Make move");
@@ -442,6 +446,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		return unmodifiableList(spectators);
 	}
 
+	/**
+	 * @return list of all players by colour.
+	 */
 	@Override
 	public List<Colour> getPlayers() {
 
@@ -454,6 +461,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * @return set of winners
+	 */
 	@Override
 	public Set<Colour> getWinningPlayers() {
 
