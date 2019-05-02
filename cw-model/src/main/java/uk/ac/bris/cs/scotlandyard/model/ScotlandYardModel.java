@@ -311,10 +311,14 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	}
 
 	private boolean noDetectiveOnSpace(int space) {
-		for (ScotlandYardPlayer player : colourMap.values())
+
+		for (ScotlandYardPlayer player : colourMap.values()) {
 			if (player.colour() != BLACK && player.location() == space)
 				return false;
+		}
+
 		return true;
+
 	}
 
 	private Set<Move> validMoves(Colour colour) {
