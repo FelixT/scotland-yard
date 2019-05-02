@@ -1,15 +1,12 @@
 package uk.ac.bris.cs.scotlandyard.model;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.*;
-import static java.util.Objects.requireNonNull;
 import static uk.ac.bris.cs.scotlandyard.model.Colour.BLACK;
 import static uk.ac.bris.cs.scotlandyard.model.Ticket.*;
 
 import java.util.*;
 import java.util.function.Consumer;
 
-import org.apache.commons.lang3.ObjectUtils;
 import uk.ac.bris.cs.gamekit.graph.Edge;
 import uk.ac.bris.cs.gamekit.graph.Graph;
 import uk.ac.bris.cs.gamekit.graph.ImmutableGraph;
@@ -421,9 +418,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	@Override
 	public void startRotate() {
 
-		if(isGameOver()) {
+		if(isGameOver())
 			throw new IllegalStateException("Can't start new round when the game is already over");
-		}
 
 		System.out.println("---Start rotate");
 		System.out.println("Round " + round);
