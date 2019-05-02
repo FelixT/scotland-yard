@@ -17,11 +17,12 @@ Scotland Yard Project Report
 ## Achievemens
 
 - OO concepts?
+- polymorphism used by moves: allows us to return e.g. a set containing 'Moves' while each of these might be PassMove, TicketMove or DoubleMove. Each of these inherits the Move class
+- 'consumer' used for accept
 - visitor model
 - dynamic dispach
 - callbacks
 - DRY principle
-- polymorphism
 - abstraction
 
 ## (brief) reflection
