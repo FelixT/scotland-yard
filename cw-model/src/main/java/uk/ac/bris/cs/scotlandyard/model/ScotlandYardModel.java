@@ -305,6 +305,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Adds a spectator to the spectator list (unless null or already added).
+	 * @param spectator to register to list.
+	 */
 	@Override
 	public void registerSpectator(Spectator spectator) {
 
@@ -316,7 +320,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	}
 
 	/**
-	 * Unregisters a given spectator (unless null or never added).
+	 * Removes a given spectator from spectator list (unless null or never added).
 	 * @param spectator to unregister.
 	 */
 	@Override
