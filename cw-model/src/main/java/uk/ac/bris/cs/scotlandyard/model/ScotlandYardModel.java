@@ -447,7 +447,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	@Override
 	public Set<Colour> getWinningPlayers() {
 
-        isGameOver();
+        isGameOver(); // isGameOver updates the 'winners' set.
 		return unmodifiableSet(winners);
 
 	}
