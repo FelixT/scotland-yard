@@ -286,6 +286,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Accept move (if valid and non-null) and progress with the game (logicAfterMove).
+	 * @param move to process.
+	 */
 	@Override
 	public void accept(Move move) {
 
