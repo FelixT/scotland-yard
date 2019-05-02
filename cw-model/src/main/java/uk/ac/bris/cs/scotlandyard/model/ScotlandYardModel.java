@@ -116,9 +116,18 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
         }
     }
 
+    private void updateTickets(Colour playerColour, Ticket ticket, int change) {
+
+	    ScotlandYardPlayer player = colourMap.get(playerColour);
+        int ticketsAfter = player.tickets().get(ticket) + change;
+        player.tickets().replace(ticket, ticketsAfter);
+
+	}
+
 
 	@Override
     public void visit(PassMove move) {
+
         System.out.println("Pass move");
 
         if (currentPlayer == BLACK) {
@@ -153,7 +162,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		System.out.println("Ticket move, " + move.ticket());
 
 		TicketMove specMove = move;
-		
+
 		// If it's not a reveal round we give mrX's last known location, otherwise set last known location.
 		if(rounds.size() > round && currentPlayer == BLACK) {
             if (rounds.get(round))
@@ -166,17 +175,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		player.location(move.destination());
 
 		// Decrease number of tickets of player.
-		int ticketsLeft = player.tickets().get(move.ticket()) - 1;
-		player.tickets().replace(move.ticket(), ticketsLeft);
-		
-		if(currentPlayer != BLACK) {
-			
-			// Detectives transfer their tickets to Mr X.
-			ScotlandYardPlayer mrx = colourMap.get(BLACK);
-			int newtickets = mrx.tickets().get(move.ticket()) + 1;
-			mrx.tickets().replace(move.ticket(), newtickets);
-			
-		}
+		updateTickets(currentPlayer, move.ticket(), -1);
+
+        // Detectives transfer their tickets to Mr X.
+		if(currentPlayer != BLACK)
+            updateTickets(BLACK, move.ticket(), 1);
 
 		boolean wasMrX = (currentPlayer == BLACK);
 		nextPlayer();
@@ -194,7 +197,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		System.out.println("On move made");
 
         System.out.println("--Next player" + currentPlayer);
-        
+
 	}
 
 	@Override
@@ -210,6 +213,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		boolean revealOne = (rounds.size() > round) && rounds.get(round);
 		boolean revealTwo = (rounds.size() > round) && rounds.get(round + 1);
 
+		// If one of the moves occurs during a hidden round we change its destination to the last revealed location.
         if (!revealOne && revealTwo)
             firstMove = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), lastMrX);
         if (revealOne && !revealTwo)
@@ -224,9 +228,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		nextPlayer();
 		System.out.println("--Next player " + currentPlayer);
 
-		// Decrease number of double tickets in mrX's possession.
-		int doubleTicketsLeft = mrx.tickets().get(DOUBLE) - 1;
-		mrx.tickets().replace(DOUBLE, doubleTicketsLeft);
+		// Decrease number of double tickets in mrX's posession.
+		updateTickets(BLACK, DOUBLE, -1);
 
 		for (Spectator spectator : spectators)
 			spectator.onMoveMade(this, specMove);
@@ -235,8 +238,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		// -- FIRST MOVE --
 
 		// Mr X loses ticket used for their first move.
-		int ticketsLeft = mrx.tickets().get(move.firstMove().ticket()) - 1;
-		mrx.tickets().replace(move.firstMove().ticket(), ticketsLeft);
+		updateTickets(BLACK, move.firstMove().ticket(), -1);
 
 		mrx.location(move.firstMove().destination());
 
@@ -255,8 +257,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		// --SECOND MOVE--
 
 		// Decrease number of tickets for second move.
-		ticketsLeft = mrx.tickets().get(move.secondMove().ticket()) - 1;
-		mrx.tickets().replace(move.secondMove().ticket(), ticketsLeft);
+        updateTickets(BLACK, move.secondMove().ticket(), -1);
 
 		mrx.location(move.secondMove().destination());
 
