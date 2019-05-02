@@ -110,7 +110,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
                 spectator.onRotationComplete(this);
             System.out.println("On rotation complete");
         } else {
-
+        	// continue the rotation by prompting the next player to move
             Set<Move> moves = validMoves(currentPlayer);
 	        giveMovesToCurrentPlayer(moves);
 	        
@@ -122,7 +122,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
     public void visit(PassMove move) {
         System.out.println("Pass move");
 
-        if (currentPlayer == BLACK) { // quite possibly redundant
+        if (currentPlayer == BLACK) {
             round++;
             System.out.println("--Increased round " + round);
 
@@ -169,9 +169,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 			mrx.tickets().replace(move.ticket(), newtickets);
 		}
 
+		boolean wasMrX = (currentPlayer == BLACK);
 		nextPlayer();
 
-        if (wasMrX) { // quite possibly redundant
+		// if player was mrX then it's the end of the round, so we start the next
+        if (wasMrX) {
             round++;
             System.out.println("Increased round " + round);
 
