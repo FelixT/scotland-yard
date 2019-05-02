@@ -208,7 +208,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		System.out.println("double move");
 
-		ScotlandYardPlayer mrx = colourMap.get(BLACK);
+		ScotlandYardPlayer mrX = colourMap.get(BLACK);
 
 		TicketMove firstMove  = move.firstMove();
 		TicketMove secondMove = move.secondMove();
@@ -234,8 +234,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		// Decrease number of double tickets in mrX's possession.
 		updateTickets(BLACK, DOUBLE, -1);
 
-		for (Spectator spectator : spectators)
-			spectator.onMoveMade(this, specMove);
+		notifySpectatorsMoveMade(specMove);
         System.out.println("on overall move made");
 
 		// -- FIRST MOVE --
@@ -243,7 +242,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		// Mr X loses ticket used for their first move.
 		updateTickets(BLACK, move.firstMove().ticket(), -1);
 
-		mrx.location(move.firstMove().destination());
+		mrX.location(move.firstMove().destination());
 
 		round++;
 		System.out.println("--Increased round " + round);
@@ -262,7 +261,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		// Decrease number of tickets for second move.
         updateTickets(BLACK, move.secondMove().ticket(), -1);
 
-		mrx.location(move.secondMove().destination());
+		mrX.location(move.secondMove().destination());
 
 		// If either round is hidden we display the location as Mr X's last known location instead.
 		if (revealTwo)
@@ -279,6 +278,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Notifies all spectators in spectator list of a move made.
+	 * @param move to notify spectators of.
+	 */
 	private void notifySpectatorsMoveMade(Move move) {
 
 		for (Spectator spectator : spectators)
