@@ -14,14 +14,14 @@ import uk.ac.bris.cs.gamekit.graph.Node;
 
 public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, MoveVisitor {
 
-	private List<Boolean> rounds;
-	private Graph<Integer, Transport> graph;
-	private List<Spectator> spectators = new ArrayList<>();
 	private int round = 0;
-	private Colour currentPlayer = BLACK;
 	private int lastMrX = 0;
-	private Map<Colour, ScotlandYardPlayer> colourMap = new LinkedHashMap<>(); // Used to guarantee order.
+	private List<Boolean> rounds;
+	private Colour currentPlayer = BLACK;
+	private Graph<Integer, Transport> graph;
 	private Set<Colour> winners = new HashSet<>();
+	private List<Spectator> spectators = new ArrayList<>();
+	private Map<Colour, ScotlandYardPlayer> colourMap = new LinkedHashMap<>(); // Used to guarantee order.
 
 	public ScotlandYardModel(List<Boolean> rounds, Graph<Integer, Transport> graph,
 			PlayerConfiguration mrX, PlayerConfiguration firstDetective,
@@ -55,7 +55,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		allTicketSet.add(Ticket.SECRET);
 
 		Set<Integer> locationSet = new HashSet<>();
-		Set<Colour> colourSet = new HashSet<>();
+		Set<Colour> colourSet    = new HashSet<>();
 
 		List<ScotlandYardPlayer> players = new ArrayList<>();
 
@@ -168,7 +168,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		if (rounds.size() > round && currentPlayer == BLACK) {
 
             if (rounds.get(round))
-                lastMrX = specMove.destination();
+                lastMrX  = specMove.destination();
             else
                 specMove = new TicketMove(move.colour(), move.ticket(), lastMrX);
 
@@ -210,7 +210,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		ScotlandYardPlayer mrx = colourMap.get(BLACK);
 
-		TicketMove firstMove = move.firstMove();
+		TicketMove firstMove  = move.firstMove();
 		TicketMove secondMove = move.secondMove();
 
 		boolean revealOne = (rounds.size() > round) && rounds.get(round);
@@ -218,11 +218,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		// If one of the moves occurs during a hidden round we change its destination to the last revealed location.
         if (!revealOne && revealTwo)
-            firstMove = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), lastMrX);
+            firstMove  = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), lastMrX);
         if (revealOne && !revealTwo)
             secondMove = new TicketMove(move.secondMove().colour(), move.secondMove().ticket(), firstMove.destination());
         if (!revealOne && !revealTwo) {
-            firstMove = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), lastMrX);
+            firstMove  = new TicketMove(move.firstMove().colour(), move.firstMove().ticket(), lastMrX);
             secondMove = new TicketMove(move.secondMove().colour(), move.secondMove().ticket(), lastMrX);
         }
 
@@ -305,6 +305,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Adds a spectator to the spectator list (unless null or already added).
+	 * @param spectator to register to list.
+	 */
 	@Override
 	public void registerSpectator(Spectator spectator) {
 
@@ -315,6 +319,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Removes a given spectator from spectator list (unless null or never added).
+	 * @param spectator to unregister.
+	 */
 	@Override
 	public void unregisterSpectator(Spectator spectator) {
 
@@ -327,6 +335,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Check if a detective is on a particular space.
+	 * @param space the node number / location of a space to check for detectives on.
+	 * @return true if space occupied by detective, false otherwise.
+	 */
 	private boolean noDetectiveOnSpace(int space) {
 
 		for (ScotlandYardPlayer player : colourMap.values()) {
@@ -338,6 +351,12 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Generates the set of valid moves for a player. If no moves are
+	 * possible, a single PassMove is added to the set.
+	 * @param colour of player for which valid moves should be generated.
+	 * @return Set of valid moves the player can make.
+	 */
 	private Set<Move> validMoves(Colour colour) {
 
 		ScotlandYardPlayer player = colourMap.get(colour);
@@ -403,6 +422,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Update the currentPlayer to be the next player.
+	 */
 	private void nextPlayer() {
 
 		// Get current player index.
@@ -414,6 +436,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Start a rotation by passing validMoves to the first player (Mr X).
+	 */
 	@Override
 	public void startRotate() {
 
@@ -429,6 +454,10 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Passes the set of valid moves to the current player.
+	 * @param moves the set of valid moves the current player can make.
+	 */
 	private void giveMovesToCurrentPlayer(Set<Move> moves) {
 
 		System.out.println("Make move");
@@ -442,6 +471,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		return unmodifiableList(spectators);
 	}
 
+	/**
+	 * @return list of all players by colour.
+	 */
 	@Override
 	public List<Colour> getPlayers() {
 
@@ -454,6 +486,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * @return set of winners
+	 */
 	@Override
 	public Set<Colour> getWinningPlayers() {
 
@@ -462,10 +497,16 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Gives the location of detective requested. If Mr X requested,
+	 * location given in reveal round, or lastMrX if not.
+	 * @param colour The colour of the player whose location is requested.
+	 * @return location of player, or empty if player does not exist.
+	 */
 	@Override
 	public Optional<Integer> getPlayerLocation(Colour colour) {
 
-		if (colourMap.containsKey(colour)) { // If the requested player exists..
+		if (colourMap.containsKey(colour)) { // Check if the player exists / is in use.
 
 			ScotlandYardPlayer player = colourMap.get(colour);
 			final Optional<Integer> location = Optional.of(player.location());
@@ -495,9 +536,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	}
 
 	/**
-	 * Gives the number of tickets of a type a player has.
-	 * @param colour The colour of the player whose tickets are requested; not null
-	 * @param ticket The type of tickets that is being requested; not null
+	 * Gives the number of tickets of a specified type a player has.
+	 * @param colour The colour of the player whose tickets are requested.
+	 * @param ticket The type of tickets that is being requested.
 	 * @return number of tickets, or empty if player doesn't exist.
 	 */
 	@Override
@@ -512,6 +553,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Determines whether or not the game is over.
+	 * If over, adds the winner(s) to 'winners'.
+	 * @return true if game over, or false otherwise.
+	 */
 	@Override
 	public boolean isGameOver() {
 
