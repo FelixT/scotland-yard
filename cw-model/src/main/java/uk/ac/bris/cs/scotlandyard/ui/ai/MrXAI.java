@@ -29,7 +29,7 @@ public class MrXAI implements PlayerFactory {
 			// get the distance of the potential move and mrX's last known location
 			int distance = Math.abs(location - move.destination());
 
-			if(distance > furthestDistance) {
+			if(distance >= furthestDistance) {
 				furthestDistance = distance;
 				furthestMove = move;
 			}
@@ -39,7 +39,7 @@ public class MrXAI implements PlayerFactory {
 			// get the distance of the potential move and mrX's last known location
 			int distance = Math.abs(location - move.finalDestination());
 
-			if(distance > furthestDistance) {
+			if(distance >= furthestDistance) {
 				furthestDistance = distance;
 				furthestMove = move;
 			}
@@ -50,7 +50,6 @@ public class MrXAI implements PlayerFactory {
 				Consumer<Move> callback) {
 			// reset values
 			furthestDistance = 0;
-			furthestMove = new PassMove(Colour.BLACK);
 			if(view.getPlayerLocation(Colour.BLACK).isPresent()) // this should always be the case
                 this.location = view.getPlayerLocation(Colour.BLACK).get(); // get position known to detectives
 
