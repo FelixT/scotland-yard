@@ -12,7 +12,9 @@ Scotland Yard Project Report
 ## Summary on what has been done
 
 - implemented the spec? lol
-- ai
+- First we perform checks on the game info we have been given
+- The valid moves function...
+- A basic AI for Mr X which, for each turn it has, picks the move it can make which places it as far as possible from its last known position, based on the assumption this is where detectives will attempt to head to. It does this by...
 
 ## Achievemens
 
@@ -24,6 +26,7 @@ Scotland Yard Project Report
 - DRY principle
 - abstraction
 - model view controller?
+- used LinkedHashMap
 
 ## (brief) reflection
 
