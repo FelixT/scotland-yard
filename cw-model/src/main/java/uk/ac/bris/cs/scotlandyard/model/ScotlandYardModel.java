@@ -455,7 +455,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 	@Override
 	public Optional<Integer> getPlayerLocation(Colour colour) {
 
-		if(colourMap.containsKey(colour)) { // if exists
+		if(colourMap.containsKey(colour)) { // If the requested player exists..
 
 			ScotlandYardPlayer player = colourMap.get(colour);
 			final Optional<Integer> location = Optional.of(player.location());
@@ -464,7 +464,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 				if (round != 0 && rounds.get(round - 1)) {
 
-					// If its a reveal round, give Mr X's location
+					// If its a reveal round, give Mr X's location.
 					lastMrX = player.location();
 					return location;
 
