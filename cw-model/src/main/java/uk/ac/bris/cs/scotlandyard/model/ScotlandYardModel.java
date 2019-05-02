@@ -486,9 +486,14 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public Optional<Integer> getPlayerTickets(Colour colour, Ticket ticket) {
+
 		ScotlandYardPlayer player = colourMap.get(colour);
-		if (player == null) return Optional.empty();
+
+		if (player == null)
+			return Optional.empty();
+
 		return Optional.of(player.tickets().get(ticket));
+
 	}
 
 	@Override
