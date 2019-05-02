@@ -7,9 +7,8 @@ import uk.ac.bris.cs.scotlandyard.model.*;
 import java.util.Set;
 import java.util.function.Consumer;
 
-// TODO name the AI
-@ManagedAI("MrXAI")
-public class MrXAI implements PlayerFactory {
+@ManagedAI("Trev")
+public class Trev implements PlayerFactory {
 
 	@Override
 	public Player createPlayer(Colour colour) {
