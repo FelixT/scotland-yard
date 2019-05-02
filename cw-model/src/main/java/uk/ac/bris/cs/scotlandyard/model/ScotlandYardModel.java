@@ -171,7 +171,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		boolean wasMrX = (currentPlayer == BLACK);
 		nextPlayer();
 
-		// if player was mrX then it's the end of the round, so we start the next
+		// If player was Mr X then it's the end of the round, so we start the next.
         if (wasMrX) {
             round++;
             System.out.println("Increased round " + round);
@@ -226,7 +226,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		// -- FIRST MOVE --
 
-		// MrX loses ticket used for their first move
+		// Mr X loses ticket used for their first move.
 		int ticketsleft = mrx.tickets().get(move.firstMove().ticket()) - 1;
 		mrx.tickets().replace(move.firstMove().ticket(), ticketsleft);
 
@@ -235,7 +235,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		round++;
 		System.out.println("--Increased round " + round);
 
-		// if either round is hidden we display the location as mrX's last known location instead
+		// If either round is hidden we display the location as Mr X's last known location instead.
 		if (revealOne)
 			lastMrX = firstmove.destination();
 
@@ -254,7 +254,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		mrx.location(move.secondMove().destination());
 
-		// If either round is hidden we display the location as mrX's last known location instead.
+		// If either round is hidden we display the location as Mr X's last known location instead.
 		if (revealTwo)
 			lastMrX = secondmove.destination();
 
