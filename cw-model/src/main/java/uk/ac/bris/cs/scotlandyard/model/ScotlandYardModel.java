@@ -191,6 +191,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public void visit(DoubleMove move) {
+
 		System.out.println("double move");
 
 		ScotlandYardPlayer mrx = colourMap.get(BLACK);
@@ -215,7 +216,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		nextPlayer();
 		System.out.println("--Next player " + currentPlayer);
 
-		// decrease number of double tickets in mrX's posession
+		// Decrease number of double tickets in mrX's possession.
 		int doubleticketsleft = mrx.tickets().get(DOUBLE) - 1;
 		mrx.tickets().replace(DOUBLE, doubleticketsleft);
 
@@ -247,16 +248,17 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 		// --SECOND MOVE--
 
-		// decrease number of tickets for second move
+		// Decrease number of tickets for second move.
 		ticketsleft = mrx.tickets().get(move.secondMove().ticket()) - 1;
 		mrx.tickets().replace(move.secondMove().ticket(), ticketsleft);
 
 		mrx.location(move.secondMove().destination());
-		// if either round is hidden we display the location as mrX's last known location instead
+
+		// If either round is hidden we display the location as mrX's last known location instead.
 		if (revealTwo)
 			lastMrX = secondmove.destination();
 
-		// next rounds starts after first move made
+		// Next rounds starts after first move made.
 		round++;
 		System.out.println("--Increased round" + round);
 
@@ -278,6 +280,7 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	@Override
 	public void accept(Move move) {
+
 		System.out.println("Consumer.accept");
 
 		if (move == null)
