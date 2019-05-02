@@ -112,7 +112,8 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
         } else {
 
             Set<Move> moves = validMoves(currentPlayer);
-	        givePlayerMoves(moves);
+	        giveMovesToCurrentPlayer(moves);
+	        
         }
     }
 
@@ -418,11 +419,11 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 		System.out.println("Current player " + currentPlayer);
 
         Set<Move> moves = validMoves(currentPlayer);
-		givePlayerMoves(moves);
+		giveMovesToCurrentPlayer(moves);
 
 	}
 
-	private void givePlayerMoves(Set<Move> moves) {
+	private void giveMovesToCurrentPlayer(Set<Move> moves) {
 
 		System.out.println("Make move");
 		ScotlandYardPlayer player = colourMap.get(currentPlayer);
