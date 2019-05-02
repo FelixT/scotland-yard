@@ -403,6 +403,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Update the currentPlayer to be the next player.
+	 */
 	private void nextPlayer() {
 
 		// Get current player index.
@@ -414,6 +417,9 @@ public class ScotlandYardModel implements ScotlandYardGame, Consumer<Move>, Move
 
 	}
 
+	/**
+	 * Start a rotation by passing validMoves to the first player (Mr X).
+	 */
 	@Override
 	public void startRotate() {
 
